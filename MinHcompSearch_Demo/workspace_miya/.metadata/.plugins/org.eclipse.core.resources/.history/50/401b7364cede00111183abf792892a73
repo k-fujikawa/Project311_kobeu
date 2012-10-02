@@ -1,0 +1,58 @@
+package search;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.tartarus.snowball.SnowballProgram;
+
+public class TemporalProfile {
+	Class stemClass = Class.forName("org.tartarus.snowball.ext." + "english" + "Stemmer");
+			
+	SnowballProgram stemmer = (SnowballProgram) stemClass.newInstance();
+
+	RunQuery rq = new RunQuery();
+	TweetsDB db = new TweetsDB();
+	List<Map> tweets;
+	String query;
+
+	public TemporalProfile(String query_, int retnum) {
+		query = query_;
+		tweets = rq.search(query, retnum);
+	}
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+	}
+
+	public List<DateScore> queryProfile(int top) {
+		List<DateScore> tp = new ArrayList<DateScore>();
+		for (Map tweet : tweets) {
+			String docno = (String) tweet.get("docno");
+			Double score = Double.valueOf((String) tweet.get("score"));
+			Date date = (Date) db.getTweet(docno).get("date");
+			DateScore ds = new DateScore(date, score);
+			tp.add(ds);
+		}
+		return tp;
+	}
+
+	public Map<String, List<DateScore>> expandedQueryProfile(int top,
+			List<String> cand_terms){
+		Set<String> cts = new HashSet(cand_terms);
+		for (Map tweet : tweets) {
+			String docno = (String) tweet.get("docno");
+			String tweet_str = (String) tweet.get("tweet");
+			Double score = Double.valueOf((String) tweet.get("score"));
+			for (String term : tweet_str.split(" ")) {
+
+			}
+		}
+		return null;
+	}
+}

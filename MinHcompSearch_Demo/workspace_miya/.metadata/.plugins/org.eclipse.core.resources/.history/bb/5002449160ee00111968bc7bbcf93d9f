@@ -1,0 +1,112 @@
+package main;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.lang.StringUtils;
+
+import search.RunQuery;
+import search.TemporalProfile;
+
+import com.google.gson.Gson;
+
+public class TwitterSetsServer implements Runnable {
+	Socket s;
+	int id;
+	String hostname = "rubicon.cs.scitec.kobe-u.ac.jp";
+	int port = 5600;
+
+	public TwitterSetsServer(Socket s, int id) {
+		this.s = s;
+		this.id = id;
+	}
+
+	public TwitterSetsServer(String hostname, int port, Socket s, int id) {
+		this.hostname = hostname;
+		this.port = port;
+		this.s = s;
+		this.id = id;
+	}
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		int port = 9998, count = 0;
+		try {
+			// create new socket
+			ServerSocket ss = new ServerSocket(port);
+			System.out.println("Waiting for client");
+			while (true) {
+				Socket s = ss.accept();
+				TwitterSetsServer server = new TwitterSetsServer(s, count);
+				// launch new thread
+				Thread t = new Thread(server);
+				t.start();
+			}
+		} catch (Exception e) {
+			// Ignore error
+			System.out.println("Error");
+		}
+	}
+
+	@Override
+	public void run() {
+		try {
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					s.getInputStream()));
+			PrintWriter pw = new PrintWriter(new OutputStreamWriter(
+					s.getOutputStream()));
+			String query_str = br.readLine();
+
+			System.out.println("QUERY_str : " + query_str);
+			String[] qq = query_str.split("||");
+			String query = qq[0];
+			RunQuery rq = new RunQuery(hostname, port);
+			Gson gs = new Gson();
+			query = StringUtils.strip(query);
+
+			Set<String> candTerms = new HashSet<String>();
+			int tweetnum = 10;
+			int tagnum = 25;
+			int retnum = 100;
+			int M = 30;
+			int L = 30;
+			double alpha = 0.9;
+			double enTh = 0.1;
+			String results;
+			TemporalProfile tp = new TemporalProfile(rq, query, retnum);
+			System.out.println("TP size : " + tp.size());
+			////////////////////////////////////////////////////////////
+			// System.out.println("JS"+gs.toJson(js).toString());
+			////////////////////////////////////////////////////////////
+			if (tp.size() == 0) {
+				Map js = new HashMap();
+				results = gs.toJson(js).toString();
+			} else {
+				Map<String, Double> map = tp.TSQE(M, L, alpha, enTh);
+				Map<String, Double> tagcloud = rq.tagcloud(tp.topCandTerms(map,
+						tagnum));
+				List<Object[]> tweets = tp.topTweets(tweetnum);
+				Map js = new HashMap();
+				js.put("tweets", tweets);
+				js.put("tagcloud", tagcloud);
+				results = gs.toJson(js).toString();
+			}
+			pw.println(results);
+			pw.flush();
+		} catch (Exception e) {
+			// Ignore error
+			System.out.println("Thread: Error");
+		}
+	}
+}

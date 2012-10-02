@@ -1,0 +1,125 @@
+package main;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
+
+import search.RunQuery;
+import search.TemporalProfile;
+
+import com.google.gson.Gson;
+
+/**
+ * Servlet implementation class TwitterSets
+ */
+@WebServlet("/TwitterSetsServlet")
+public class TwitterSetsServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private static String url = "";
+	public static final String DOCTYPE = "<!DOCTYPE HTML>";
+	public static String CSSD = "/css/";
+	public static String JSD = "/script/";
+	public static String IMGD = "/img/";
+	private static String index = "/Users/taiki/data/Tweets2011/data/index/indri/trectext.en.krov";
+	//private static String index = "/home/taiki/mnt/rubicon/data/Microblog2011/data/index/indri/trectext.en.krov";
+	//private static String index = "/home/taiki/data/Tweets2011/index/indri/trectext.en.krov/";
+	String hostname = "rubicon.cs.scitec.kobe-u.ac.jp";
+	//int port = 5600;
+	int port = 9998;
+	Socket s;
+	
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public TwitterSetsServlet() {	
+		super();
+		//-Djava.library.path=/usr/local/lib
+		//System.setProperty("java.library.path", "/usr/local/lib");
+		//System.setProperty("java.library.path", "/home/taiki/app/lib");
+		//System.setProperty("java.library.path", "/home/taiki/data/src/indri-5.3/swig/obj/java");
+		//System.out.println("index = " + index);
+		//System.out.println("java.library.path = " + System.getProperty("java.library.path"));
+	}
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doGet(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		response.sendRedirect("/TwitterSets/index.html");
+		//response.sendRedirect("http://www.ai.cs.kobe-u.ac.jp/~taiki/twisets/index.html");
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		//RunQuery rq = new RunQuery(index);
+		RunQuery rq = new RunQuery(hostname, port);
+		Gson gs = new Gson();
+		
+		String field = null;
+		
+		PrintWriter out = response.getWriter();
+		List<String> qs = new ArrayList<String>();
+		qs.add(request.getParameter("q1"));
+		qs.add(request.getParameter("q2"));
+		qs.add(request.getParameter("q3"));
+		qs.add(request.getParameter("q4"));
+		qs.add(request.getParameter("q5"));
+		String query = rq.qs2query(qs, field);
+		String cw = request.getParameter("cw");
+
+		
+				
+		/* original query processing */
+		if (rq.queryCheck(qs) && cw == null) {
+			InetAddress addr = InetAddress.getByName(null);
+			s = new Socket(addr, port);
+			OutputStreamWriter osw = new OutputStreamWriter(s.getOutputStream());
+			PrintWriter pw = new PrintWriter(osw);
+			BufferedReader br1 = new BufferedReader(new InputStreamReader(s.getInputStream()));
+			pw.println(query);
+			pw.flush();
+			out.write(br1.readLine());			
+		}
+		/* expanded query processing */
+		else if (rq.queryCheck(qs)  && cw != null) {
+			String equery = query +"##"+cw;
+			
+			InetAddress addr = InetAddress.getByName(null);
+			s = new Socket(addr, port);
+			OutputStreamWriter osw = new OutputStreamWriter(s.getOutputStream());
+			PrintWriter pw = new PrintWriter(osw);
+			BufferedReader br1 = new BufferedReader(new InputStreamReader(s.getInputStream()));
+			pw.println(query);
+			pw.flush();
+			out.write(br1.readLine());
+		} else {
+			System.err.println("No query");
+		}
+		out.close();
+	}
+}

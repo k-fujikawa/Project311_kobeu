@@ -1,0 +1,50 @@
+Query Text	News Categories	National/International	Entity Categories
+BBC World Service staff cuts	world	international	NE
+2022 FIFA soccer	sport	international	AC
+Haiti Aristide return	world	international	NE
+Mexico drug war	u.s.	national	LO
+NIST computer security	u.s.	national	AC
+NSA	u.s.	national	AC
+Pakistan diplomat arrest murder	politics	international	LO
+phone hacking British politicians	world	international	LO
+Toyota Recall	business	international	NE
+Egyptian protesters attack museum	world	international	LO
+Kubica crash	sport	international	NE
+Assange Nobel peace nomination	world	international	NE
+Oprah Winfrey half-sister	entertainment	international	NEM
+release of "The Rite"	arts	neutral	NE
+Thorpe return in 2012 Olympics	sport	international	NE
+release of "Known and Unknown"	arts	neutral	NEM
+White Stripes breakup	arts	international	NEM
+William and Kate fax save-the-date	entertainment	international	NEA
+Cuomo budget cuts	business	national	NE
+Taco Bell filling lawsuit	business	national	NEM
+Emanuel residency court rulings	politics	national	NE
+healthcare law unconstitutional	politics	national	-
+Amtrak train service	travel	national	NE
+Super Bowl, seats	sport	national	NEM
+TSA airport screening	travel	national	AC
+US unemployment	u.s.	national	-
+reduce energy consumption	u.s.	national	-
+Detroit Auto Show	u.s.	national	LO
+global warming and weather	world	international	-
+Keith Olbermann new job	entertainment	national	NEM
+Special Olympics athletes	sport	international	NE
+State of the Union  and jobs	politics	national	NEM	
+Dog Whisperer Cesar Millan's techniques	entertainment	neutral	NEM
+MSNBC Rachel Maddow	entertainment	national	NEM
+Sargent Shriver tributes	u.s.	national	NE
+Moscow airport bombing	world	international	LO
+Giffords' recovery	entertainment	national	NE
+protests in Jordan	world	international	LO
+Egyptian curfew	world	international	LO
+Beck attacks Piven	entertainment	international	NEA
+Obama birth certificate	u.s.	national	NE
+Holland Iran envoy recall	world	international	LO
+Kucinich olive pit lawsuit	entertainment	national	NE
+White House spokesman replaced	politics	national	NE
+political campaigns and social media	politics	neutral	-
+Bottega Veneta	shopping	neutral	NE
+organic farming requirements	food	neutral	-
+Egyptian evacuation	world	international	LO
+carbon monoxide law	health	national	-

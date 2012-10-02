@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta http-equiv="content-type" content="text/html" charset="UTF-8">
+    <link href="css/mycss3.css" rel="stylesheet">
+    <link type="text/css" href="css/jquery.ui.all.css" rel="stylesheet">
+    <title>Tweets2011 コーパス検索2</title>
+    <script src="js/jquery-1.7.2.min.js"></script>
+    <script type='text/javascript' src="js/jquery.ui.datepicker-ja.js"></script>
+    <script type='text/javascript' src="js/jquery.ui.core.js"></script>
+    <script type='text/javascript' src="js/jquery.ui.widget.js"></script>
+    <script type='text/javascript' src="js/jquery.ui.datepicker.js"></script>
+  </head>
+  <body>
+    <div id="header">
+      <a href="http://localhost:8080/MicroblogSearcher/IndexPageSV" class="other-ver">TOP</a>&nbsp &nbsp
+      <a href="http://localhost:8080/MicroblogSearcher/MicroblogSearcherSV1" class="other-ver">ver1.0</a>&nbsp
+      <a href="http://localhost:8080/MicroblogSearcher/MicroblogSearcherSV" style="color:white;">ver2.0</a>&nbsp
+      <a href="http://localhost:8080/MicroblogSearcher/MicroblogSearcherSV2_1" class="other-ver">ver2.1</a>&nbsp
+    </div>
+    <div class="navbar">
+      <div class="navbar-inner">
+	<h1>Tweets2011 コーパス検索2</h1>
+	<div id="serch-zone">
+	  <form action="./MicroblogSearcherSV" method="POST">
+	    <p>
+	      <input type="search" name="QueryStr" size="40" required="required" value="release of "The Rite"">
+	      <input type="submit" value="検索">
+	      &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+	      <span style="color:white;">λ
+		<input type="number" name="lambda_val" id="lambda_value" min="0.00" max="1.00" step="0.05" value="0.3" size="3">
+		<input type="range" name="lambda_rg" id="lambda_range" min="0.00" max="1.00" step="0.05" value="0.3">
+	      </span>
+	      &nbsp &nbsp &nbsp &nbsp
+	      <span style="color:white;font-size:14.5px;">
+		見つけるTweetの最大数
+		<input type="text" name="hitnumber" pattern="^[0-9]+$" value="100" size="4">
+		件
+		<br><br>
+		&nbsp &nbsp &nbsp
+		<input type="checkbox" name="time-on-off" id="timecheck" value="1">
+		日付指定
+		<input type="text" name="time" id="datepicker">
+		&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+		見つけるサブトピックの数
+		<input type="text" name="clusternum" pattern="^[1-9]$" value="3" size="1">
+		&nbsp &nbsp &nbsp &nbsp
+		<input type="checkbox" name="dayonoff" id="daycheck" value="1">
+		サブトピックのある日のみ表示
+	      </span>
+	    </p>
+	  </form>
+	</div>
+      </div>
+    </div>
+    <div id="subtopic">
+      <h3>Subtopics</h3>
+      <span style="color:#ffe5f0;">★</span>&nbsp<a href="#tweet0">@AnneLunalicious rite rite rite :) great job IMAGE. @MGTFest2011</a><br>
+      <span style="color:#ffc4df;">★</span>&nbsp<a href="#tweet1">Release</a><br>
+      <span style="color:#ff0083;">★</span>&nbsp<a href="#tweet2">Rite</a><br>
+    </div>
+    <br><table class ="table-line">
+      <tr class="table-line">
+	<th class="table-verygood">強い関係がある</th>
+	<th class="table-good">関係がある</th>
+	<th class="table-normal">あまり関係がない</th>
+	<th class="table-spam">全く関係がない（スパム等）</th>
+      </tr>
+    </table><br>
+    <div class="timeline">
+      <div class="month-box">
+	<div class="month-line">
+	  <h1>Feb</h1><br>
+	  <p>2011</p><br>
+	  <hr>
+	</div>
+      </div>
+      <div class="day-non">
+	<div class="circle" style="background-color:white;">
+	  <p>8</p>
+	</div>
+      </div>
+      <div class="day-non">
+	<div class="circle" style="background-color:white;">
+	  <p>7</p>
+	</div>
+      </div>
+      <div class="day">
+	<div class="circle" style="background-color:#ffe5f0;">
+	  <p>6</p>
+	</div>
+	<a name="tweet0"><div class="arrow_box"></a>
+	<p><span style="color:#1e90ff">RiaNurf&nbsp;:&nbsp;</span><span style="background-color:transparent">@AnneLunalicious rite rite rite :) great job IMAGE. @MGTFest2011</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 01:09:47 +0000 2011</span></p>
+	</div>
+      </div>
+      <div class="day-non">
+	<div class="circle" style="background-color:white;">
+	  <p>5</p>
+	</div>
+      </div>
+      <div class="day-non">
+	<div class="circle" style="background-color:white;">
+	  <p>4</p>
+	</div>
+      </div>
+      <div class="day-non">
+	<div class="circle" style="background-color:white;">
+	  <p>3</p>
+	</div>
+      </div>
+      <div class="day-non">
+	<div class="circle" style="background-color:white;">
+	  <p>2</p>
+	</div>
+      </div>
+      <div class="day">
+	<div class="circle" style="background-color:#ffc4df;">
+	  <p>1</p>
+	</div>
+	<a name="tweet1"><div class="arrow_box"></a>
+	<p><span style="color:#1e90ff">DudeFaceGeoffy&nbsp;:&nbsp;</span><span style="background-color:transparent">Release</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 22:32:37 +0000 2011</span></p>
+	<p><span style="color:#1e90ff">HannahBoxYou_x3&nbsp;:&nbsp;</span><span style="background-color:transparent">RELEASE RELEASE RELEASE !! I WILL BUYY !!! :D</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sat Jan 29 06:36:34 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">NoLoveShawty&nbsp;:&nbsp;</span><span style="background-color:transparent">Needing release</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Thu Feb 03 15:41:48 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">LadyGranuaile&nbsp;:&nbsp;</span><span style="background-color:transparent">Release the CRAKEN!</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Tue Jan 25 23:53:22 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">genoyoung&nbsp;:&nbsp;</span><span style="background-color:transparent">Release The Kraken!!!</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Thu Jan 27 02:08:56 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">tracy_aka_pause&nbsp;:&nbsp;</span><span style="background-color:transparent">Early release</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Wed Jan 26 11:56:09 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">lcspt&nbsp;:&nbsp;</span><span style="background-color:transparent">Release the Validation!</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Thu Jan 27 03:37:58 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">NEW_NWB&nbsp;:&nbsp;</span><span style="background-color:transparent">The great release</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Fri Feb 04 21:47:26 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">ilybucey&nbsp;:&nbsp;</span><span style="background-color:transparent">Early release :)</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Tue Feb 01 15:51:44 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">AliffDoggy&nbsp;:&nbsp;</span><span style="background-color:transparent">Release to refresh</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Thu Jan 27 12:46:57 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">HarrySokoloff&nbsp;:&nbsp;</span><span style="background-color:transparent">Simultaneous release</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 30 01:33:24 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">MoJoTmO&nbsp;:&nbsp;</span><span style="background-color:transparent">@WarOnLOVE release it.</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Mon Feb 07 22:57:07 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">Amber_Corinne&nbsp;:&nbsp;</span><span style="background-color:transparent">Release the crackon!!</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Mon Feb 07 15:47:30 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">xSannexxx&nbsp;:&nbsp;</span><span style="background-color:transparent">#np release me, release my bodyyy</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Mon Jan 31 18:28:31 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">cheapwomenshoes&nbsp;:&nbsp;</span><span style="background-color:transparent">Release Nikon http://www.cameradeals101.info/release-nikon/</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 16:28:37 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">GPzinhu&nbsp;:&nbsp;</span><span style="background-color:transparent">release your love release your love</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Tue Feb 08 16:23:42 +0000 2011</span></p>
+	</div>
+      </div>
+      <div class="month-box">
+	<div class="month-line">
+	  <h1>Jan</h1><br>
+	  <p>2011</p><br>
+	  <hr>
+	</div>
+      </div>
+      <div class="day-non">
+	<div class="circle" style="background-color:white;">
+	  <p>31</p>
+	</div>
+      </div>
+      <div class="day-non">
+	<div class="circle" style="background-color:white;">
+	  <p>30</p>
+	</div>
+      </div>
+      <div class="day-non">
+	<div class="circle" style="background-color:white;">
+	  <p>29</p>
+	</div>
+      </div>
+      <div class="day">
+	<div class="circle" style="background-color:#ff0083;">
+	  <p>28</p>
+	</div>
+	<a name="tweet2"><div class="arrow_box"></a>
+	<p><span style="color:#1e90ff">RicStackz&nbsp;:&nbsp;</span><span style="background-color:transparent">Rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Fri Jan 28 11:47:33 +0000 2011</span></p>
+	<p><span style="color:#1e90ff">KeepThaChange&nbsp;:&nbsp;</span><span style="background-color:transparent">Is that rite?</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 30 01:51:21 +0000 2011</span></p>
+	<p><span style="color:#1e90ff">901kingjoe&nbsp;:&nbsp;</span><span style="background-color:transparent">@4Fit_or_JoiNer lol rite rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 23 09:40:32 +0000 2011</span></p>
+	<p><span style="color:#1e90ff">BiGTiMEMODEL&nbsp;:&nbsp;</span><span style="background-color:transparent">@POPPYDAY_JAN28 Rite Rite ! Lol</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Tue Jan 25 17:38:18 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">CozyBcareful&nbsp;:&nbsp;</span><span style="background-color:transparent">@BNC22charlie --rite,rite..!</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Tue Feb 01 15:23:38 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">TmoneyDaBossO&nbsp;:&nbsp;</span><span style="background-color:transparent">@KENyoudiggit rite rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Fri Jan 28 05:07:37 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">MsNewEra&nbsp;:&nbsp;</span><span style="background-color:transparent">@GREEDYGIDDY lmao rite rite !</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Fri Jan 28 11:53:27 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">lean1on1&nbsp;:&nbsp;</span><span style="background-color:transparent">@envy2aww2010 rite!</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 23 16:46:28 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">filapinamix&nbsp;:&nbsp;</span><span style="background-color:transparent">@DamnHeYella rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 23 17:20:14 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">Chris_Seepersad&nbsp;:&nbsp;</span><span style="background-color:transparent">@Trilla_Tizzle rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 23 19:56:41 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">iChArnold&nbsp;:&nbsp;</span><span style="background-color:transparent">@ChanelPretty rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Thu Feb 03 14:38:28 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">Lia_RipBrock&nbsp;:&nbsp;</span><span style="background-color:transparent">@Cora_Love0307 rite:-)</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Thu Feb 03 00:34:03 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">Lau_Wren&nbsp;:&nbsp;</span><span style="background-color:transparent">#nw The Rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Thu Feb 03 03:05:18 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">broshesbomb&nbsp;:&nbsp;</span><span style="background-color:transparent">@Its_Hollywood rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sat Jan 29 07:29:14 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">TiffanyDenise22&nbsp;:&nbsp;</span><span style="background-color:transparent">@cocoShanaiel rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Wed Feb 02 06:14:24 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">chnceofalyftime&nbsp;:&nbsp;</span><span style="background-color:transparent">@moneymakers215 rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Wed Feb 02 04:01:03 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">Quizzo540&nbsp;:&nbsp;</span><span style="background-color:transparent">ALL RITE!!!!!</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Wed Feb 02 15:55:13 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">Stizzy_EA&nbsp;:&nbsp;</span><span style="background-color:transparent">@SamBiggs rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Tue Jan 25 21:21:23 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">Cockybrand&nbsp;:&nbsp;</span><span style="background-color:transparent">@Ms_Jackson69 Rite..</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Tue Jan 25 21:26:14 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">THAREELBIGDADDY&nbsp;:&nbsp;</span><span style="background-color:transparent">RITE..... @ShaqJ</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Tue Jan 25 08:12:33 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">pmartinezdoblas&nbsp;:&nbsp;</span><span style="background-color:transparent">Cinema..."The rite"</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Mon Jan 31 03:28:57 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">MR_CDT&nbsp;:&nbsp;</span><span style="background-color:transparent">@Nino_Brown1422 rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Mon Jan 31 19:00:57 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">Ceon3000&nbsp;:&nbsp;</span><span style="background-color:transparent">sumthing not rite........</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Mon Jan 31 21:42:32 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">phillipa1091&nbsp;:&nbsp;</span><span style="background-color:transparent">@MrStevenJ10 rite!!</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Wed Feb 02 03:34:21 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">solemn_bars&nbsp;:&nbsp;</span><span style="background-color:transparent">@BioncaDanae RITE!</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Tue Feb 01 20:16:49 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">BazzyB19&nbsp;:&nbsp;</span><span style="background-color:transparent">@BillionaireBoyB rite...</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Mon Jan 24 00:30:24 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">Smooky21&nbsp;:&nbsp;</span><span style="background-color:transparent">@RealMcknight rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Mon Jan 24 23:38:09 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">King_Chunk&nbsp;:&nbsp;</span><span style="background-color:transparent">@syounger215 rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Wed Jan 26 00:33:33 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">Arvyel&nbsp;:&nbsp;</span><span style="background-color:transparent">@Jusluv2smile rite...</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Tue Jan 25 16:23:51 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">CloneBoiRico&nbsp;:&nbsp;</span><span style="background-color:transparent">@Hazel_Be rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Wed Jan 26 23:46:19 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">Kev_GotDaJuice&nbsp;:&nbsp;</span><span style="background-color:transparent">@REED_aboutme rite on</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Wed Jan 26 17:25:15 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">YesImFresh24_7&nbsp;:&nbsp;</span><span style="background-color:transparent">@Stynk1 rite on</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Wed Jan 26 21:58:36 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">BrownnEyes1995&nbsp;:&nbsp;</span><span style="background-color:transparent">@Nikkihaha1  Rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Thu Jan 27 01:31:27 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">666Ritchie&nbsp;:&nbsp;</span><span style="background-color:transparent">The Rite (2011)</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Fri Jan 28 22:13:24 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">TeamMinajVVS&nbsp;:&nbsp;</span><span style="background-color:transparent">@_cjd rite"</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Thu Jan 27 04:09:10 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">KeepnUpWit_Ryan&nbsp;:&nbsp;</span><span style="background-color:transparent">@Skys10DreamTeam rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Fri Jan 28 14:57:48 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">sky_alexander12&nbsp;:&nbsp;</span><span style="background-color:transparent">@EskimoMeechyhoe rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Fri Feb 04 02:52:31 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">marlyn_ice&nbsp;:&nbsp;</span><span style="background-color:transparent">@AAalipio the rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Thu Feb 03 13:55:51 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">Mister_Tougaloo&nbsp;:&nbsp;</span><span style="background-color:transparent">U rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Fri Feb 04 20:59:58 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">itsCurt_Mbro&nbsp;:&nbsp;</span><span style="background-color:transparent">@GabbyMarieLA rite !</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Tue Feb 01 19:07:25 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">dynamite_action&nbsp;:&nbsp;</span><span style="background-color:transparent">@PROBLEMATIC_KIA rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Tue Jan 25 21:05:06 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">elhew4&nbsp;:&nbsp;</span><span style="background-color:transparent">The Rite@TSash</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sat Jan 29 13:43:10 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">DAYDAY_DAGREAT&nbsp;:&nbsp;</span><span style="background-color:transparent">@Dior429 rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Fri Jan 28 01:39:52 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">YesTashazFancy&nbsp;:&nbsp;</span><span style="background-color:transparent">HAHAHAHAHAHA #RITE</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Fri Jan 28 05:32:51 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">NickV1021&nbsp;:&nbsp;</span><span style="background-color:transparent">@StaySoloDolo the rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 30 00:28:47 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">taniekathick&nbsp;:&nbsp;</span><span style="background-color:transparent">@DerrickSwerve rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 30 04:49:18 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">MzPrimnProper&nbsp;:&nbsp;</span><span style="background-color:#ffbf80">The rite was good</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 30 08:04:22 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">BeautifulTashia&nbsp;:&nbsp;</span><span style="background-color:transparent">@sassy_marie rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 30 01:22:54 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">Dee_Be_Jammin&nbsp;:&nbsp;</span><span style="background-color:transparent">@Britbloom rite!!!</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sat Feb 05 19:10:12 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">JoeMajor_ALE&nbsp;:&nbsp;</span><span style="background-color:transparent">@BreezeECarson RITE...</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sat Feb 05 17:46:14 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">WeedIsMyCologne&nbsp;:&nbsp;</span><span style="background-color:transparent">Feeeelin to rite ;)</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sat Feb 05 17:51:00 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">CallMe_LowKeyy&nbsp;:&nbsp;</span><span style="background-color:transparent">@Johnny_NoFlexx rite!!</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sat Feb 05 22:27:20 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">ree_thatbull&nbsp;:&nbsp;</span><span style="background-color:transparent">Lmao rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 21:43:37 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">AyeeRapirap&nbsp;:&nbsp;</span><span style="background-color:transparent">@chaletpena The Rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Tue Feb 08 04:49:51 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">hdgfdfhgkdfsdbg&nbsp;:&nbsp;</span><span style="background-color:transparent">@PartyHard53 rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Tue Feb 08 03:29:23 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">SxyN8vStar&nbsp;:&nbsp;</span><span style="background-color:transparent">@CallumMacrae rite on!</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Tue Feb 08 08:34:20 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">Aaliyah_Boo&nbsp;:&nbsp;</span><span style="background-color:transparent">Damn rite! :)</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 23:33:52 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">QueenVMarie&nbsp;:&nbsp;</span><span style="background-color:transparent">@itsKAOTIK_duh Rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 18:23:54 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">Kloud_Stryfe&nbsp;:&nbsp;</span><span style="background-color:transparent">@BSGNolagrooves Rite!</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 00:39:13 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">FINNA_MORPH&nbsp;:&nbsp;</span><span style="background-color:transparent">@syndicate88 RITE</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Mon Feb 07 01:00:10 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">GME07SUCCESS&nbsp;:&nbsp;</span><span style="background-color:transparent">@LadyJay85  rite rite catch u then :)</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Thu Jan 27 20:55:30 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">Lil_Ani&nbsp;:&nbsp;</span><span style="background-color:transparent">@SheSo_HollyWood lol rite hea rite hea rite hea</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Wed Feb 02 06:37:20 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">iLUCY60Z&nbsp;:&nbsp;</span><span style="background-color:transparent">@maya_2flawless AH RITE AH RITE.. ZEEN..</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 23 05:00:30 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">sprintertrueno&nbsp;:&nbsp;</span><span style="background-color:transparent">@MirageMeister good rite ! see liao high rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 23 09:09:41 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">_isNOTshort&nbsp;:&nbsp;</span><span style="background-color:transparent">I NEED food, like rite rite now.</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Mon Jan 24 17:58:17 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">TheCrazies_XCs&nbsp;:&nbsp;</span><span style="background-color:transparent">@Nay_Nay04 Lol u rite u rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Fri Jan 28 04:54:40 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">Samuel_B_Easy&nbsp;:&nbsp;</span><span style="background-color:transparent">it is BEYOND COLD RITE NOWWW</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 23 04:28:56 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">authenticKzDOE&nbsp;:&nbsp;</span><span style="background-color:transparent">@size11nikes rite!!!! Ha!</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 23 21:43:57 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">W_Matthews_11&nbsp;:&nbsp;</span><span style="background-color:transparent">Something don't feel rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 23 02:44:54 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">BeautifulTAM_&nbsp;:&nbsp;</span><span style="background-color:transparent">U love me rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 23 03:44:56 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">TheCrazies_XCs&nbsp;:&nbsp;</span><span style="background-color:transparent">@NOBODYH8CHRIS Rite Lol</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 23 18:53:34 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">iAmCeeJayee&nbsp;:&nbsp;</span><span style="background-color:transparent">in a peaceful mood rite now</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 23 07:13:44 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">Eazy_does_it&nbsp;:&nbsp;</span><span style="background-color:transparent">Im fucking on rite now</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 23 07:15:27 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">ImHerBoss&nbsp;:&nbsp;</span><span style="background-color:transparent">Im crankin rite now</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 23 03:36:53 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">BWtellem&nbsp;:&nbsp;</span><span style="background-color:transparent">@_bow2daGoddess lls rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 23 17:37:17 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">RetroAirGeordan&nbsp;:&nbsp;</span><span style="background-color:transparent">@Smoker_Mirrors yes and rite here</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 23 15:20:06 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">WhatsGoodEd&nbsp;:&nbsp;</span><span style="background-color:transparent">oh man is rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 23 01:33:58 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">_Shoniaa&nbsp;:&nbsp;</span><span style="background-color:transparent">@JAZistheMAN lmao . U rite !</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 23 01:43:36 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">_RLFraser_&nbsp;:&nbsp;</span><span style="background-color:transparent">@iTiffz omw for it rite now :)</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 23 20:31:22 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">Farinssa&nbsp;:&nbsp;</span><span style="background-color:transparent">Sleeping rite now or later??? (¬_¬")</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 23 14:16:32 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">summer_nigga_91&nbsp;:&nbsp;</span><span style="background-color:transparent">@SquadFella_JD yea u rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 23 20:55:21 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">ClosedToPublic_&nbsp;:&nbsp;</span><span style="background-color:transparent">@LoveDimee_ Not black thooo rite ?</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 23 23:18:36 +0000 2011</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">Conlanmcleod&nbsp;:&nbsp;</span><span style="background-color:transparent">@CherylsSoldierr oh rite!! :) x</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 23 23:22:39 +0000 2011</span></p>
+	</div>
+      </div>
+      <div class="day-non">
+	<div class="circle" style="background-color:white;">
+	  <p>27</p>
+	</div>
+      </div>
+      <div class="day-non">
+	<div class="circle" style="background-color:white;">
+	  <p>26</p>
+	</div>
+      </div>
+      <div class="day-non">
+	<div class="circle" style="background-color:white;">
+	  <p>25</p>
+	</div>
+      </div>
+      <div class="day-non">
+	<div class="circle" style="background-color:white;">
+	  <p>24</p>
+	</div>
+      </div>
+    </div>
+    <div id="footer">
+      <hr>
+      <a href="http://localhost:8080/MicroblogSearcher/IndexPageSV">Topに戻る</a>
+    </div>
+    <script>
+      $(function() {
+      $(document).ready(function(){
+      $('.arrow_box > p').siblings('.hukidashi-hide').hide();
+      });
+      $('.arrow_box > p').click(function(){
+      $(this).siblings('.hukidashi-hide').slideToggle('slow');
+      });
+      $('#lambda_range').change(function() {
+      var lam1 = $('#lambda_range').val();
+      $('#lambda_value').val(lam1);
+      });
+      $('#lambda_value').change(function() {
+      var lam2 = $('#lambda_value').val();
+      $('#lambda_range').val(lam2);
+      });
+      $('#header > .other-ver').mouseover(function() {
+      $(this).css("color","white");
+      });
+      $('#header > .other-ver').mouseout(function() {
+      $(this).css("color","#999999");
+      });
+      $('#daycheck').change(function() {
+      $('.day-non').toggle();
+      });
+      $('#datepicker').datepicker({
+      dateFormat: 'yy/mm/dd',
+      changeMonth: true,
+      changeYear: true,
+      yearRange: '2011:2012',
+      showMonthAfterYear: false
+      });
+      });
+    </script>
+  </body>
+</html>

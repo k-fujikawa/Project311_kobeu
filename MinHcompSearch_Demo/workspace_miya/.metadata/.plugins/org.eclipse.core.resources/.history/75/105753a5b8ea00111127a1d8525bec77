@@ -1,0 +1,313 @@
+package search;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import lemurproject.indri.QueryEnvironment;
+import lemurproject.indri.ScoredExtentResult;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.math3.stat.StatUtils;
+
+import com.mongodb.DBObject;
+
+public class RunQuery {
+	QueryEnvironment env;
+	TweetsDB db = new TweetsDB();
+	private String field = null;
+	private String index = null;
+	private String server = null;
+
+	public RunQuery(String index_) {
+		this.index = index_;
+	}
+
+	public RunQuery(String hostname, int port) {
+		this.server = hostname + ":" + Integer.toString(port);
+	}
+
+	public void setField(String field) {
+		this.field = field;
+	}
+
+	public String getIndexPath() {
+		return this.index;
+	}
+
+	public String getServerName() {
+		return this.server;
+	}
+
+	private String qs2query(List<String> qs, String field) {
+		String qpre = "#combine";
+		if (field != null) {
+			qpre += "[" + field + "]";
+		}
+		StringBuffer sb = new StringBuffer(qpre + "(");
+		for (String q : qs) {
+			if (q.split(" ").length >= 2) {
+				sb.append(" #od(" + q + ")");
+			} else {
+				sb.append(" " + q);
+			}
+		}
+		sb.append(" )");
+		return sb.toString();
+	}
+
+	public List<Map> search(List<String> qs, int retnum) {
+		String[] names;
+		List<Map> list = new ArrayList<Map>();
+		try {
+			String query = qs2query(qs, field);
+			System.out.println("QUERY : " + query + "(" + retnum + ")");
+			System.out.println("Index : " + this.index);
+			System.out.println("Server : " + this.server);
+
+
+			// String command = "ls -l";
+			String[] cmd = {"/usr/local/bin/IndriRunQuery", "-query=" + query,
+					"-count=" + Integer.toString(retnum),
+					"-server="+ server,
+					"-trecFormat=true"
+			};
+			System.out.println("COMMAND : "+StringUtils.join(cmd, " "));
+			Process process = Runtime.getRuntime().exec(cmd);
+			InputStream is = process.getInputStream();
+			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			String line;
+			while ((line = br.readLine()) != null) {
+				line.split(" ")[2];
+			}
+			for (int i = 0; i < results.length; i++) {
+				DBObject tweet_obj = db.getTweet(names[i]);
+				String tweet_str = (String) tweet_obj.get("tweet");
+				Date date = (Date) tweet_obj.get("date");
+
+				Map map = new HashMap<String, String>();
+				map.put("score", results[i].score);
+				map.put("tweetid", names[i]);
+				map.put("date", date);
+				map.put("tweet", tweet_str);
+				list.add(map);
+			}
+			
+//			InputStream eis =process.getErrorStream();
+//			BufferedReader ebr = new BufferedReader(new InputStreamReader(eis));
+//			while ((line = ebr.readLine()) != null) {
+//				System.err.println(line);
+//			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	public List<Map> search2(List<String> qs, int retnum) {
+		String[] names;
+		List<Map> list = new ArrayList<Map>();
+
+		try {
+			env = new QueryEnvironment();
+			if (index != null) {
+				System.out.println("Add index : " + index);
+				env.addIndex(index);
+			} else if (server != null) {
+				System.out.println("Add server : " + server);
+				env.addServer(server);
+			} else {
+				System.err.println("You should specify index or server.");
+			}
+			String query = qs2query(qs, field);
+			System.out.println("QUERY : " + query + "(" + retnum + ")");
+			System.out.println("Index : " + this.index);
+			System.out.println("Server : " + this.server);
+
+			ScoredExtentResult[] results = env.runQuery(query, retnum);
+
+			System.out.println("RetNum : " + results.length);
+
+			names = env.documentMetadata(results, "docno");
+			for (int i = 0; i < results.length; i++) {
+				DBObject tweet_obj = db.getTweet(names[i]);
+				String tweet_str = (String) tweet_obj.get("tweet");
+				Date date = (Date) tweet_obj.get("date");
+
+				Map map = new HashMap<String, String>();
+				map.put("score", results[i].score);
+				map.put("tweetid", names[i]);
+				map.put("date", date);
+				map.put("tweet", tweet_str);
+				list.add(map);
+			}
+			env.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	public Map<String, Double> tagcloud(Map<String, Double> map_) {
+		Map<String, Double> map = new HashMap<String, Double>();
+		double Z = 0;
+		double[] vs = ArrayUtils.toPrimitive(map_.values().toArray(
+				new Double[0]));
+		double v_max = StatUtils.max(vs);
+		double v_min = StatUtils.min(vs);
+
+		for (String term : map_.keySet()) {
+			double score = ((map_.get(term) - v_min) / (v_max - v_min) + 0.1) * 10;
+			map.put(term, score);
+			System.out.println(score + "\t" + term);
+		}
+		return map;
+	}
+
+	private Map sortByValue(Map map) {
+		List list = new LinkedList(map.entrySet());
+		Collections.sort(list, new Comparator() {
+			public int compare(Object o1, Object o2) {
+				return -((Comparable) ((Map.Entry) (o1)).getValue())
+						.compareTo(((Map.Entry) (o2)).getValue());
+			}
+		});
+		Map result = new LinkedHashMap();
+		for (Iterator it = list.iterator(); it.hasNext();) {
+			Map.Entry entry = (Map.Entry) it.next();
+			result.put(entry.getKey(), entry.getValue());
+		}
+		return result;
+	}
+
+	public static void printMap(Map mp) {
+		Iterator it = mp.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry pairs = (Map.Entry) it.next();
+			if ((Integer) pairs.getValue() == 1) {
+				continue;
+			}
+			System.out.println("'" + pairs.getKey() + " = " + pairs.getValue());
+			it.remove(); // avoids a ConcurrentModificationException
+		}
+	}
+
+	/**
+	 * Make temporal profile from retrieved tweets
+	 * 
+	 * @param tweets
+	 * @return
+	 */
+	public Map<Date, Float> tweets2tp(List<Map> tweets) {
+		Map<Date, Float> dateMap = new HashMap<Date, Float>();
+		for (Map tweet : tweets) {
+			try {
+				String date_str = (String) tweet.get("date");
+				DateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+				Date date = df.parse(date_str);
+				// System.out.println(date);
+				// System.exit(-1);
+				Float count = dateMap.get(date);
+				dateMap.put(date, count == null ? 1 : count + 1);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		return dateMap;
+	}
+
+	/**
+	 * Make chart for the temporal profile of a word
+	 * 
+	 * @param tp_map
+	 * @return
+	 */
+	public List chart(Map<String, Map> tp_map) {
+		List tps = new ArrayList();
+		Map<String, Map> tpsMap = new HashMap<String, Map>();
+		Set tps_ = new HashSet();
+
+		for (String q : tp_map.keySet()) {
+			Map<Date, Double> tp = tp_map.get(q);
+			tpsMap.put(q, tp);
+			tps_.addAll(tp.keySet());
+		}
+
+		Date dayMax = Collections.max(tps_);
+		Date dayMin = Collections.min(tps_);
+		dayMax = DateUtils.addDays(dayMax, 1);
+		dayMin = DateUtils.addDays(dayMin, -1);
+
+		List days = new ArrayList();
+		for (Date day = dayMin; day.getTime() <= dayMax.getTime(); day = DateUtils
+				.addDays(day, 1)) {
+			days.add(day);
+			Map<String, Object> tp_norm = new HashMap<String, Object>();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+			tp_norm.put("time", sdf.format(day));
+
+			for (String q : tpsMap.keySet()) {
+				Map<Date, Double> tp = tpsMap.get(q);
+				Double count = tp.get(day);
+				count = (count == null ? 0 : count / sum(tp.values()));
+				tp_norm.put(q, count);
+			}
+			tps.add(tp_norm);
+		}
+		return tps;
+	}
+
+	private double sum(Collection<Double> cols) {
+		double sum = StatUtils.sum(ArrayUtils.toPrimitive(cols
+				.toArray(new Double[0])));
+		return sum;
+	}
+
+	public boolean queryCheck(List<String> qs) {
+		for (String q : qs) {
+			if (q != "" && q != null) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @param args
+	 */
+	@SuppressWarnings("unchecked")
+	public static void main(String[] args) {
+		List<String> query = new ArrayList<String>();
+		query.add("the rite");
+		query.add("movie");
+		//query.add("fifa");
+		//query.add("soccer");
+		//query.add("2022");
+		int retnum = 10;
+		RunQuery rq = new RunQuery("rubicon.cs.scitec.kobe-u.ac.jp", 5600);
+		List<Map> tweets = rq.search(query, retnum);
+		for (Map tweet : tweets) {
+			Object[] t = { tweet.get("score"), tweet.get("tweetid"),
+					tweet.get("date"), tweet.get("tweet") };
+			System.out.println(StringUtils.join(t, "\t"));
+		}
+	}
+}

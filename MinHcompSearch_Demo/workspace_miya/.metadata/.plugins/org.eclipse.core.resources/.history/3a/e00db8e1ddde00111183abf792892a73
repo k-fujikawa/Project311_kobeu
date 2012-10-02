@@ -1,0 +1,248 @@
+package search;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+
+import lemurproject.indri.ParsedDocument;
+import lemurproject.indri.QueryEnvironment;
+import lemurproject.indri.ScoredExtentResult;
+
+import org.apache.commons.lang.time.DateUtils;
+
+import com.google.gson.Gson;
+
+public class RunQuery {
+	// private static String index =
+	private static String index = "/Users/taiki/data/Tweets2011/data/index/indri/trectext.en.krov";
+
+	public RunQuery() {
+	}
+
+	public RunQuery(String index_) {
+		index = index_;
+	}
+
+	public List<Map> search(String query, int retnum) {
+		QueryEnvironment env = new QueryEnvironment();
+		ScoredExtentResult[] results;
+		List<Map> list = new ArrayList<Map>();
+		try {
+			env.addIndex(index);
+			query = "#combine[tweet](" + query + ")";
+			results = env.runQuery(query, retnum);
+			for (int i = 0; i < results.length; i++) {
+				int[] did = { results[i].document };
+				ParsedDocument d = env.documents(did)[0];
+				Map<String, String> map = parse(d.text);
+				//System.out.println('\t'+map.get("tweet"));
+				System.out.println('\t'+did);
+				System.out.println('\t'+d.text);
+				map.put("score", Double.toString(results[i].score));
+				//map.put("score", results[i].score);
+				list.add(map);
+			}
+			env.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	private Map<String, String> parse(String text) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		String docno = text.split("<DOCNO>")[1].split("</DOCNO>")[0];
+		String tweet = text.split("<tweet>")[1].split("</tweet>")[0];
+		String date = text.split("<date>")[1].split("</date>")[0];
+		map.put("docno", docno);
+		map.put("tweet", tweet);
+		map.put("date", date);
+		return map;
+	}
+
+	/**
+	 * count word frequency in the retrieved tweets
+	 * 
+	 * @param tweets
+	 * @return
+	 */
+	public Map<String, Integer> tagcloud(List<Map> tweets, int num) {
+		TreeMap<String, Integer> freq = new TreeMap<String, Integer>();
+
+		for (Map m : tweets) {
+			String tweet = (String) m.get("tweet");
+			String[] words = tweet.split("\\s");
+			for (String word : words) {
+				word = word.toLowerCase();
+				if (word == " " || word == "" || word == "\n")
+					continue;
+				if (word.length() <= 1)
+					continue;
+				int count = freq.containsKey(word) ? freq.get(word) : 0;
+				freq.put(word, count + 1);
+			}
+		}
+
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		Set<String> ks = sortByValue(freq).keySet();
+		int i = 0;
+		for (String k : ks) {
+			if (i >= num)
+				break;
+			if (freq.get(k) <= 1)
+				continue;
+			map.put(k, freq.get(k));
+			i++;
+		}
+		return map;
+	}
+
+	private Map sortByValue(Map map) {
+		List list = new LinkedList(map.entrySet());
+		Collections.sort(list, new Comparator() {
+			public int compare(Object o1, Object o2) {
+				return -((Comparable) ((Map.Entry) (o1)).getValue())
+						.compareTo(((Map.Entry) (o2)).getValue());
+			}
+		});
+		Map result = new LinkedHashMap();
+		for (Iterator it = list.iterator(); it.hasNext();) {
+			Map.Entry entry = (Map.Entry) it.next();
+			result.put(entry.getKey(), entry.getValue());
+		}
+		return result;
+	}
+
+	public static void printMap(Map mp) {
+		Iterator it = mp.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry pairs = (Map.Entry) it.next();
+			if ((Integer) pairs.getValue() == 1) {
+				continue;
+			}
+			System.out.println("'" + pairs.getKey() + " = " + pairs.getValue());
+			it.remove(); // avoids a ConcurrentModificationException
+		}
+	}
+
+	/**
+	 * Make temporal profile from retrieved tweets
+	 * 
+	 * @param tweets
+	 * @return
+	 */
+	public Map<Date, Float> tweets2tp(List<Map> tweets) {
+		Map<Date, Float> dateMap = new HashMap<Date, Float>();
+		for (Map tweet : tweets) {
+			try {
+				String date_str = (String) tweet.get("date");
+				DateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+				Date date = df.parse(date_str);
+				// System.out.println(date);
+				// System.exit(-1);
+				Float count = dateMap.get(date);
+				dateMap.put(date, count == null ? 1 : count + 1);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
+		return dateMap;
+	}
+
+	/**
+	 * Make chart for the temporal profile of a word
+	 * 
+	 * @param tp_map
+	 * @return
+	 */
+	public List chart(Map<String, List> tp_map) {
+		List tps = new ArrayList();
+		Map<String, Map> tpsMap = new HashMap<String, Map>();
+		Set tps_ = new HashSet();
+
+		for (String q : tp_map.keySet()) {
+			Map<Date, Float> tp = tweets2tp(tp_map.get(q));
+			tpsMap.put(q, tp);
+			tps_.addAll(tp.keySet());
+		}
+
+		Date dayMax = Collections.max(tps_);
+		Date dayMin = Collections.min(tps_);
+		dayMax = DateUtils.addDays(dayMax, 1);
+		dayMin = DateUtils.addDays(dayMin, -1);
+
+		List days = new ArrayList();
+		for (Date day = dayMin; day.getTime() <= dayMax.getTime(); day = DateUtils
+				.addDays(day, 1)) {
+			days.add(day);
+			Map<String, Object> tp_norm = new HashMap<String, Object>();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+			tp_norm.put("time", sdf.format(day));
+
+			for (String q : tpsMap.keySet()) {
+				Map<Date, Float> tp = tpsMap.get(q);
+				Float count = tp.get(day);
+				count = (count == null ? 0 : count / sum(tp.values()));
+				// tp_norm.put(q, count.toString());
+				tp_norm.put(q, count);
+			}
+			tps.add(tp_norm);
+		}
+		return tps;
+	}
+
+	private float sum(Collection<Float> cols) {
+		float sum = 0;
+		for (Float col : cols) {
+			sum += col;
+		}
+		return sum;
+	}
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		String query = "Obama";
+		int retnum = 100;
+		int tweetnum = 10;
+		int tagnum = 30;
+
+		Gson gs = new Gson();
+		RunQuery rq = new RunQuery();
+		List<Map> tweets = rq.search(query, retnum);
+		Map<String, Integer> tagcloud = rq.tagcloud(tweets, tagnum);
+
+		// printMap(tagcloud);
+		/*
+		 * Map js = new HashMap(); js.put("tweets",
+		 * ArrayUtils.subarray(tweets.toArray(), 0, tweetnum));
+		 * js.put("tagcloud", tagcloud); System.out.println(gs.toJson(js));
+		 */
+		query = "FIFA soccer";
+		String equery = query + " " + "Qatar";
+
+		Map<String, List> tp_map = new HashMap<String, List>();
+
+		System.out.println(rq.search(query, retnum));
+		
+		tp_map.put(query, rq.search(query, retnum));
+		tp_map.put(equery, rq.search(equery, retnum));
+		List tps = rq.chart(tp_map);
+		System.out.println(gs.toJson(tps));
+	}
+}

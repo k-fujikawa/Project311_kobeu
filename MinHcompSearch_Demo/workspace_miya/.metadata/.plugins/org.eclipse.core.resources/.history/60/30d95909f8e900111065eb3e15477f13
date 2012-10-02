@@ -1,0 +1,358 @@
+package search;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.lang.StringUtils;
+
+public class TemporalProfile {
+	static String urlpat = "(http://|https://){1}[\\w\\.\\-/:\\#\\?\\=\\&\\;\\%\\~\\+]+";
+	boolean stem = false;
+	String[] sws = { "a", "about", "above", "according", "across", "after",
+			"afterwards", "again", "against", "albeit", "all", "almost",
+			"alone", "along", "already", "also", "although", "always", "am",
+			"among", "amongst", "an", "and", "another", "any", "anybody",
+			"anyhow", "anyone", "anything", "anyway", "anywhere", "apart",
+			"are", "around", "as", "at", "av", "be", "became", "because",
+			"become", "becomes", "becoming", "been", "before", "beforehand",
+			"behind", "being", "below", "beside", "besides", "between",
+			"beyond", "both", "but", "by", "can", "cannot", "canst", "certain",
+			"cf", "choose", "contrariwise", "cos", "could", "cu", "day", "do",
+			"does", "doesn't", "doing", "dost", "doth", "double", "down",
+			"dual", "during", "each", "either", "else", "elsewhere", "enough",
+			"et", "etc", "even", "ever", "every", "everybody", "everyone",
+			"everything", "everywhere", "except", "excepted", "excepting",
+			"exception", "exclude", "excluding", "exclusive", "far", "farther",
+			"farthest", "few", "ff", "first", "for", "formerly", "forth",
+			"forward", "from", "front", "further", "furthermore", "furthest",
+			"get", "go", "had", "halves", "hardly", "has", "hast", "hath",
+			"have", "he", "hence", "henceforth", "her", "here", "hereabouts",
+			"hereafter", "hereby", "herein", "hereto", "hereupon", "hers",
+			"herself", "him", "himself", "hindmost", "his", "hither",
+			"hitherto", "how", "however", "howsoever", "i", "ie", "if", "in",
+			"inasmuch", "inc", "include", "included", "including", "indeed",
+			"indoors", "inside", "insomuch", "instead", "into", "inward",
+			"inwards", "is", "it", "its", "itself", "just", "kind", "kg", "km",
+			"last", "latter", "latterly", "less", "lest", "let", "like",
+			"little", "ltd", "many", "may", "maybe", "me", "meantime",
+			"meanwhile", "might", "moreover", "most", "mostly", "more", "mr",
+			"mrs", "ms", "much", "must", "my", "myself", "namely", "need",
+			"neither", "never", "nevertheless", "next", "no", "nobody", "none",
+			"nonetheless", "noone", "nope", "nor", "not", "nothing",
+			"notwithstanding", "now", "nowadays", "nowhere", "of", "off",
+			"often", "ok", "on", "once", "one", "only", "onto", "or", "other",
+			"others", "otherwise", "ought", "our", "ours", "ourselves", "out",
+			"outside", "over", "own", "per", "perhaps", "plenty", "provide",
+			"quite", "rather", "really", "round", "said", "sake", "same",
+			"sang", "save", "saw", "see", "seeing", "seem", "seemed",
+			"seeming", "seems", "seen", "seldom", "selves", "sent", "several",
+			"shalt", "she", "should", "shown", "sideways", "since", "slept",
+			"slew", "slung", "slunk", "smote", "so", "some", "somebody",
+			"somehow", "someone", "something", "sometime", "sometimes",
+			"somewhat", "somewhere", "spake", "spat", "spoke", "spoken",
+			"sprang", "sprung", "stave", "staves", "still", "such",
+			"supposing", "than", "that", "the", "thee", "their", "them",
+			"themselves", "then", "thence", "thenceforth", "there",
+			"thereabout", "thereabouts", "thereafter", "thereby", "therefore",
+			"therein", "thereof", "thereon", "thereto", "thereupon", "these",
+			"they", "this", "those", "thou", "though", "thrice", "through",
+			"throughout", "thru", "thus", "thy", "thyself", "till", "to",
+			"together", "too", "toward", "towards", "ugh", "unable", "under",
+			"underneath", "unless", "unlike", "until", "up", "upon", "upward",
+			"upwards", "us", "use", "used", "using", "very", "via", "vs",
+			"want", "was", "we", "week", "well", "were", "what", "whatever",
+			"whatsoever", "when", "whence", "whenever", "whensoever", "where",
+			"whereabouts", "whereafter", "whereas", "whereat", "whereby",
+			"wherefore", "wherefrom", "wherein", "whereinto", "whereof",
+			"whereon", "wheresoever", "whereto", "whereunto", "whereupon",
+			"wherever", "wherewith", "whether", "whew", "which", "whichever",
+			"whichsoever", "while", "whilst", "whither", "who", "whoa",
+			"whoever", "whole", "whom", "whomever", "whomsoever", "whose",
+			"whosoever", "why", "will", "wilt", "with", "within", "without",
+			"worse", "worst", "would", "wow", "ye", "yet", "year", "yippee",
+			"you", "your", "yours", "yourself", "yourselves" };
+	Set<String> stopwords = new HashSet<String>();
+	RunQuery rq;
+	List<Map> tweets;
+	// List<DateScore> dsList = new ArrayList<DateScore>();
+	List<String> qs;
+
+	public int size() {
+		return tweets.size();
+	}
+
+	public TemporalProfile(List<String> qs_, int retnum) {
+		qs = qs_;
+		rq = new RunQuery();
+		//String query = StringUtils.join(qs, " ");
+		tweets = rq.search(this.qs, retnum);
+		stopwords = new HashSet<String>(Arrays.asList(sws));
+	}
+
+	public TemporalProfile(RunQuery rq_, List<String> qs_, int retnum) {
+		rq = rq_;
+		qs = qs_;
+		System.out.println("Index : "+rq.getIndexPath());
+		tweets = rq.search(this.qs, retnum);
+		stopwords = new HashSet<String>(Arrays.asList(sws));
+	}
+
+	public String[] stop(String[] terms_) {
+		List<String> terms = new ArrayList<String>();
+		for (int i = 0; i < terms_.length; i++) {
+			if (stopwords.contains(terms_[i]) || terms_[i].length() <= 1) {
+				continue;
+			}
+			terms.add(terms_[i]);
+		}
+		return terms.toArray(new String[0]);
+	}
+
+	public String[] stem(String[] terms_) {
+		String[] terms = null;
+		return terms;
+	}
+
+	public String[] prepro(String sent) {
+		String[] terms = null;
+		// System.out.println(sent);
+		sent = sent.toLowerCase();
+		sent = sent.replaceAll(urlpat, " ");
+		sent = sent.replaceAll("[^a-z0-9]", " ");
+		sent = sent.replaceAll(" +", " ");
+		terms = sent.split(" ");
+		return terms;
+	}
+
+	public Set<String> candTerms(int top) {
+		Set<String> terms = new HashSet<String>();
+		for (int i = 0; i < top && i < tweets.size(); i++) {
+			Map tweet = tweets.get(i);
+			String tweetid = (String) tweet.get("tweetid");
+			String tweet_str = (String) tweet.get("tweet");
+			String[] terms_ = prepro(tweet_str);
+			terms_ = stop(terms_);
+			terms.addAll(Arrays.asList(terms_));
+		}
+		return terms;
+	}
+
+	// build query profile
+	public List<DateScore> queryProfile() {
+		List<DateScore> tp = new ArrayList<DateScore>();
+		for (Map tweet : tweets) {
+			String tweetid = (String) tweet.get("tweetid");
+			Double score = (Double) tweet.get("score");
+			Date date = (Date) tweet.get("date");
+			score = Math.exp(score);
+			DateScore ds = new DateScore(date, score);
+			tp.add(ds);
+		}
+		return tp;
+	}
+
+	// build expanded query profile
+	public Map<String, List<DateScore>> exQueryProfile(Set<String> cand_terms) {
+		Set<String> cts = new HashSet();
+		for (String cand_term : cand_terms) {
+			cts.add(cand_term.toLowerCase());
+		}
+
+		Map<String, List<DateScore>> map = new HashMap<String, List<DateScore>>();
+		for (Map tweet : tweets) {
+			String tweetid = (String) tweet.get("tweetid");
+			String tweet_str = (String) tweet.get("tweet");
+
+			for (String term : prepro(tweet_str)) {
+				// register a term
+				if (cts.contains(term)) {
+					Double score = (Double) tweet.get("score");
+					Date date = (Date) tweet.get("date");
+					score = Math.exp(score);
+					DateScore ds = new DateScore(date, score);
+					List<DateScore> dsList = null;
+					if (map.containsKey(term)) {
+						dsList = map.get(term);
+					} else {
+						dsList = new ArrayList<DateScore>();
+					}
+					dsList.add(ds);
+					map.put(term, dsList);
+				}
+			}
+		}
+		return map;
+	}
+
+	public Map<Date, Double> temporalModel(List<DateScore> dsList, int top) {
+		Map<Date, Double> tmDic = new HashMap<Date, Double>();
+		List<DateScore> tmp = new ArrayList<DateScore>();
+		double scoreAll = 0;
+
+		for (int i = 0; i < top && i < dsList.size(); i++) {
+			DateScore df = dsList.get(i);
+			tmp.add(df);
+		}
+		for (DateScore ds : tmp) {
+			scoreAll += ds.score;
+		}
+		for (DateScore ds : tmp) {
+			Date d = new Date(ds.date.getYear(), ds.date.getMonth(),
+					ds.date.getDate());
+			if (tmDic.containsKey(d)) {
+				tmDic.put(d, tmDic.get(d) + ds.score / scoreAll);
+			} else {
+				tmDic.put(d, ds.score / scoreAll);
+			}
+		}
+		return tmDic;
+	}
+
+	// public void enFilter(float th) {
+	// List<Map> tweets_en = new ArrayList<Map>();
+	// for (Map tweet : tweets) {
+	// String docno = (String) tweet.get("docno");
+	// if (db.getLang(docno) < th) {
+	// continue;
+	// }
+	// tweets_en.add(tweet);
+	// }
+	// this.tweets = tweets_en;
+	// }
+
+	public double KLdiv(Map<Date, Double> tempModelA,
+			Map<Date, Double> tempModelB, double alpha) {
+		List<Date> dates = new ArrayList<Date>();
+		for (Date d : tempModelB.keySet())
+			dates.add(d);
+		for (Date d : tempModelA.keySet())
+			dates.add(d);
+		// dates.addAll(tempModelB.keySet());
+		// System.exit(-1);
+		// System.out.println(dates);
+		double kl = 0;
+		for (Date date : new HashSet<Date>(dates)) {
+			double probA = 0;
+			double probB = 0;
+			if (tempModelA.containsKey(date)) {
+				probA = tempModelA.get(date) * alpha + 1.0 / dates.size()
+						* (1 - alpha);
+			} else {
+				probA = 1.0 / dates.size() * (1 - alpha);
+			}
+			if (tempModelB.containsKey(date)) {
+				probB = tempModelB.get(date) * alpha + 1.0 / dates.size()
+						* (1 - alpha);
+			} else {
+				probB = 1.0 / dates.size() * (1 - alpha);
+			}
+			kl += probB * Math.log(probB / probA) / Math.log(2);
+		}
+		return -kl;
+	}
+
+	public Map<String, Double> TSQE(int M, int L, double alpha, double enTh) {
+		Map<String, Double> klDic = new HashMap();
+		Set<String> candTerms = new HashSet<String>();
+		// enFilter(enTh);
+		candTerms = candTerms(M);
+		Map<Date, Double> tempQueryModel = temporalModel(queryProfile(), L);
+		Map<String, List<DateScore>> exQueryProfiles = exQueryProfile(candTerms);
+		Map<String, Double> klScoreList = new HashMap<String, Double>();
+		for (String term : exQueryProfiles.keySet()) {
+			List<DateScore> exQueryProfile = exQueryProfiles.get(term);
+			Map<Date, Double> tempExQueryModel = temporalModel(exQueryProfile,
+					L);
+			Double klScore = KLdiv(tempQueryModel, tempExQueryModel, alpha);
+			klDic.put(term, klScore);
+		}
+		return klDic;
+	}
+
+	public Map<String, Double> topCandTerms(Map<String, Double> map, int top) {
+
+		List<Map.Entry> entries = new ArrayList<Map.Entry>(map.entrySet());
+		Collections.sort(entries, new Comparator() {
+			@Override
+			public int compare(Object o1, Object o2) {
+				Map.Entry<String, Double> e1 = (Map.Entry<String, Double>) o1;
+				Map.Entry<String, Double> e2 = (Map.Entry<String, Double>) o2;
+				return (e1.getValue() - e2.getValue()) < 0 ? 1 : -1;
+			}
+		});
+		Map<String, Double> map_ = new HashMap<String, Double>();
+		for (int i = 0; i < top && i < entries.size(); i++) {
+			Map.Entry<String, Double> entry = entries.get(i);
+			map_.put(entry.getKey(), entry.getValue());
+		}
+		return map_;
+	}
+
+	public List<Object[]> topTweets(int top) {
+		List<Object[]> docs = new ArrayList<Object[]>();
+		for (int i = 0; i < top && i < tweets.size(); i++) {
+			Map tweet = tweets.get(i);
+			Double score = (Double) tweet.get("score");
+			String tweetid = (String) tweet.get("tweetid");
+			Date date = (Date) tweet.get("date");
+			String tweet_str = (String) tweet.get("tweet");
+			Object[] os = { score, tweetid, date, tweet_str };
+			docs.add(os);
+		}
+		return docs;
+	}
+
+	private void printCandTerms(Map<String, Double> map) {
+		List<Map.Entry> entries = new ArrayList<Map.Entry>(map.entrySet());
+		Collections.sort(entries, new Comparator() {
+			@Override
+			public int compare(Object o1, Object o2) {
+				Map.Entry<String, Double> e1 = (Map.Entry<String, Double>) o1;
+				Map.Entry<String, Double> e2 = (Map.Entry<String, Double>) o2;
+				return (e1.getValue() - e2.getValue()) < 0 ? 1 : -1;
+			}
+		});
+		for (Map.Entry<String, Double> entry : entries) {
+			System.out.println(entry.getKey() + " "
+					+ entry.getValue().toString());
+		}
+	}
+
+	private void printTopTweets(int top) {
+		List<Object[]> tweets = topTweets(top);
+		for (Object[] tweet : tweets) {
+			System.out.println(StringUtils.join(tweet, "\t"));
+		}
+	}
+
+	/**
+	 * @param args
+	 */
+	@SuppressWarnings("unchecked")
+	public static void main(String[] args) {
+		Set<String> candTerms = new HashSet<String>();
+		List<String> qs = new ArrayList<String>();
+		// String query = "FIFA soccer 2022";
+		qs.add("FIFA");
+		// qs.add("World Cup");
+		qs.add("soccer");
+		qs.add("2022");
+		int retnum = 1000;
+		int M = 10;
+		int L = 20;
+		double alpha = 0.9;
+		double enTh = 0.1;
+		TemporalProfile tp = new TemporalProfile(qs, retnum);
+		Map<String, Double> map = tp.TSQE(M, L, alpha, enTh);
+		tp.printCandTerms(map);
+		tp.printTopTweets(10);
+	}
+}

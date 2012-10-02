@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>SO question 2803532</title>
+		<link rel="stylesheet" type="text/css" href="css/twitter_sets.css">
+		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+		<script type="text/javascript" src="script/twitter_sets.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				var self = $('input.del');
+				var btn = $("span.deleteicon span.bt");
+				if (self.val().length < 1) {
+					btn.hide();
+				}
+				// self.keyup(function() {
+					// if (self.val().length > 0) {
+						// btn.show();
+					// } else {
+						// btn.hide();
+					// }
+				// });
+				self.onchange(function() {
+					if (self.val().length > 0) {
+						btn.show();
+					} else {
+						btn.hide();
+					}
+				});
+				btn.click(function() {
+					self.val("");
+					btn.hide();
+					self.focus();
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<span class="deleteicon"><input type="text" class="del"><span class="bt"></span></span>
+	</body>
+</html>

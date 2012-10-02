@@ -1,0 +1,34 @@
+package sample;
+
+import java.io.IOException;
+
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.ExecuteException;
+
+public class SampleExcec {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		 // コマンドを作成
+	    CommandLine commandLine = new CommandLine("ping");
+	    commandLine.addArgument("-n");
+	    commandLine.addArgument("5");
+	    commandLine.addArguments("-w 1000");
+	    commandLine.addArgument("127.0.0.1");
+	    
+	    // Executorを作成
+	    DefaultExecutor executor = new DefaultExecutor();
+	    try {
+	      executor.setExitValue(0);    // 正常終了の場合に返される値
+	      // 実行
+	      int exitValue = executor.execute(commandLine);
+	    } catch (ExecuteException ex) {
+	      ex.printStackTrace();
+	    } catch (IOException ex) {
+	      ex.printStackTrace();
+	    }
+	}
+}

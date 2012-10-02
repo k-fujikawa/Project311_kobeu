@@ -1,0 +1,36 @@
+html {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: lightpink;
+    width: 1050px;
+}
+
+#left, #middle, #right {
+    position: absolute;
+    top: 70px;
+    margin: 10px 10px 10px 10px;
+    padding: 5px;
+    width: 280px;
+    height: 500px;
+    overflow: scroll;  // スクロールバー
+}
+
+div#left {
+    left: 50px;
+    background-color: white;
+}
+
+div#middle  {
+    float: left;
+    left: 380px;
+    background-color: white;
+}
+
+div#right {
+    float: left;
+    left: 710px;
+    background-color: white;
+}

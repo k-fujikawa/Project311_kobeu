@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>=====Title=====</title>
+  <link href="css/mycss3.css" rel="stylesheet">
+  <script src="js/jquery-1.7.2.min.js"></script>
+</head>
+<body>
+  <!-- header -->
+  <div id="header">
+    header
+  </div>
+  <!-- title -->
+  <div class="navbar">
+    <div class="navbar-inner">
+      <h1>=====Title=====</h1>
+      <div id="serch-zone">
+	<form action="" method="POST">
+	  <p>
+	    <input type="text" name="QueryStr" size="40">
+	    <input type="submit" value="検索">
+	  </p>
+	</form>
+      </div>
+    </div>
+  </div>
+
+  <!-- subtopic -->
+  <div id="subtopic">
+    <h3>Subtopics</h3>
+    ★<a href="#tweet1">Tweet1</a><br>
+    ★<a href="#tweet2">Tweet2</a><br>
+    ★<a href="#tweet3">Tweet3</a>
+  </div>
+
+  <!-- timeline -->
+  <div class="timeline">
+    <div class="day">
+      <div class="circle" style="background-color:white;">
+	<p>30</p>
+      </div>
+    </div>
+    <div class="day">
+      <div class="circle" style="background-color:#c91a1a;">
+	<p>31</p>
+      </div>
+      <!-- ふきだし -->
+      <a name="tweet1"><div class="arrow_box"></a>
+	<p><span style="color:#1e90ff">Name&nbsp;:&nbsp;</span><span style="background-color:transparent">tweet1</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Date</span></p>
+	<p><span style="color:#1e90ff">Name&nbsp;:&nbsp;</span><span style="background-color:transparent">tweet1-2</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Date</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">Name&nbsp;:&nbsp;</span><span style="background-color:transparent">tweet1-3(hidden)</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Date</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">Name&nbsp;:&nbsp;</span><span style="background-color:transparent">tweet1-4(hidden)</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Date</span></p>
+      </div>
+    </div>
+    <div class="month-box">
+      <div class="month-line">
+	<h1>Feb</h1><br>
+	<p>2012</p><br>
+	<hr>
+      </div>
+    </div>
+
+    <div class="day">
+      <div class="circle" style="background-color:#f7b7b8;">
+	<p>&nbsp;1</p>
+      </div>
+      	<a name="tweet2"><div class="arrow_box"></a>
+	<p><span style="color:#1e90ff">Name&nbsp;:&nbsp;</span><span style="background-color:transparent">tweet2</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Date</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">Name&nbsp;:&nbsp;</span><span style="background-color:transparent">tweet2-2(hidden)</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Date</span></p>
+	<p class="hukidashi-hide"><span style="color:#1e90ff">Name&nbsp;:&nbsp;</span><span style="background-color:transparent">tweet2-3(hidden)</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Date</span></p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- footer -->
+  <div id="footer">
+    <hr>
+    footer
+  </div>
+  <!-- jQuery -->
+  <script>
+    $(function() {
+      // jQuery code
+    　$(document).ready(function(){
+        $('.arrow_box > p').siblings('.hukidashi-hide').hide();
+      });
+
+      $('.arrow_box > p').click(function(){
+        $(this).siblings('.hukidashi-hide').slideToggle('slow');
+      });
+    });
+    </script>
+</body>
+</html>

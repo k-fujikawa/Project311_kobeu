@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta content="Search temporal related words to a given query using Tweets2011 corpus" name="description"/>
+	<meta content="noodp" name="robots"/>
+	<title>Twitter Sets</title>
+	<link rel="stylesheet" type="text/css" href="css/twitter_sets.css">
+	<link rel="stylesheet" type="text/css" href="css/jqcloud.css" />
+	<script type="text/javascript" src="script/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="script/jqcloud-1.0.0.min.js"></script>
+	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	<script type="text/javascript" src="script/twitter_sets.js"></script>
+	<script type="text/javascript">
+    	google.load("visualization", "1", {packages:["corechart"]});
+    </script>
+</head>
+<body>
+	<div class="logo">
+	<img src="img/TwitterSets.jpg" alt="Logo" height="140" width="380"/>
+	</div>
+	<div class="ex1">
+		Automatically create sets of items temporally related to a few examples.
+	</div>
+	<div class="ex2">
+		Enter a few items from a set of things. <!-- (<a href="how2use	.html">how to use</a>) --> <br />
+		Next, press predict! and we''ll try to predict other items in the set.
+	</div>
+	<div class="query">
+    <form action="http://www.ai.cs.kobe-u.ac.jp/twisets/" method="post" id="searchForm">		
+	<!-- <form action="/TwitterSets/TwitterSetsServlet" method="post" id="searchForm">-->
+		<p><span class="deleteicon"><input type="text" class="del" id="query1" /><span class="bt" id="bt1"></span></span></p>
+		<p><span class="deleteicon"><input type="text" class="del" id="query2" /><span class="bt" id="bt2"></span></span></p>
+		<p><span class="deleteicon"><input type="text" class="del" id="query3" /><span class="bt" id="bt3"></span></span></p>
+		<p><span class="deleteicon"><input type="text" class="del" id="query4" /><span class="bt" id="bt4"></span></span></p>
+		<p><span class="deleteicon"><input type="text" class="del" id="query5" /><span class="bt" id="bt5"></span></span></p>
+		(<a href="index.html">clear all</a>) <br /><br />
+		<input type="submit" value="Predict!" onclick="searchPost()" />
+	</form>
+	</div>
+	<div id="tagcloud" class="tagcloud"></div>
+	<div id="tweets" class="tweets"></div>
+	<div id="chart_div" class="chart_div"></div>
+	<div id="websearch" class="websearch"></div>			
+</body>
+</html>

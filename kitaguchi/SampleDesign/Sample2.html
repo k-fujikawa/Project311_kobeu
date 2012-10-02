@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta http-equiv="content-type" content="text/html" charset="UTF-8">
+    <link href="css/Sample2.css" rel="stylesheet">
+    <link type="text/css" href="css/jquery.ui.all.css" rel="stylesheet">
+    <title>Twitter検索</title>
+    <script src="js/jquery-1.7.2.min.js"></script>
+    <script type='text/javascript' src="js/jquery.ui.datepicker-ja.js"></script>
+    <script type='text/javascript' src="js/jquery.ui.core.js"></script>
+    <script type='text/javascript' src="js/jquery.ui.widget.js"></script>
+    <script type='text/javascript' src="js/jquery.ui.datepicker.js"></script>
+  </head>
+  <body>
+    <div id="header">
+      <a href="http://localhost:8080/MicroblogSearcher/IndexPageSV" class="other-ver">TOP</a>&nbsp &nbsp
+      <a href="http://localhost:8080/MicroblogSearcher/MicroblogSearcherSV1" class="other-ver">ver1.0</a>&nbsp
+      <a href="http://localhost:8080/MicroblogSearcher/MicroblogSearcherSV" style="color:white;">ver2.0</a>&nbsp
+      <a href="http://localhost:8080/MicroblogSearcher/MicroblogSearcherSV2_1" class="other-ver">ver2.1</a>&nbsp
+    </div>
+    <div class="navbar">
+      <div class="navbar-inner">
+	<h1>Twitter検索</h1>
+	<div id="serch-zone">
+	  <form action="./MicroblogSearcherSV" method="POST">
+	    <p>
+	      <input type="search" name="QueryStr" size="40" required="required" value="">
+	      <input type="submit" value="検索">
+	      &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+	      <span style="color:white;">λ
+		<input type="number" name="lambda_val" id="lambda_value" min="0.00" max="1.00" step="0.05" value="0.3" size="3">
+		<input type="range" name="lambda_rg" id="lambda_range" min="0.00" max="1.00" step="0.05" value="0.3">
+	      </span>
+	      &nbsp &nbsp &nbsp &nbsp
+	      <span style="color:white;font-size:14.5px;">
+		見つけるTweetの最大数
+		<input type="text" name="hitnumber" pattern="^[0-9]+$" value="100" size="4">
+		件
+		<br><br>
+		&nbsp &nbsp &nbsp
+		<input type="checkbox" name="time-on-off" id="timecheck" value="1">
+		日付指定
+		<input type="text" name="time" id="datepicker">
+		&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+		見つけるサブトピックの数
+		<input type="text" name="clusternum" pattern="^[1-9]$" value="3" size="1">
+	      </span>
+	    </p>
+	  </form>
+	</div>
+      </div>
+    </div>
+    <div class="timeline">
+      <div class="month-box">
+	<div class="month-line">
+	  <h1>Sep</h1>
+	  <br>
+	  <hr>
+	</div>
+      </div>
+      <div class="month-box">
+	<div class="month-line">
+	  <h1>Aug</h1>
+	  <br>
+	  <hr>
+	</div>
+      </div>
+      <div class="month-box">
+	<div class="month-line">
+	  <h1>Jul</h1>
+	  <br>
+	  <hr>
+	</div>
+      </div>
+      <div class="month-box">
+	<div class="month-line">
+	  <h1>Jun</h1>
+	  <br>
+	  <hr>
+	</div>
+      </div>
+      <div class="day">
+	<a name="tweet0"><div class="tweets_box"></a>
+	<span>June 6, 2012</span>
+	<p><img src="img/profile_img_sample1.jpg" align="left"><span style="color:#1e90ff">ScreenName&nbsp;:&nbsp;</span><span style="background-color:transparent">tweet0</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 01:09:47 +0000 2011</span></p>
+	<p class="hukidashi-hide"><img src="img/profile_img_sample1.jpg" align="left"><span style="color:#1e90ff">ScreenName&nbsp;:&nbsp;</span><span style="background-color:transparent">tweet-hide</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 01:09:47 +0000 2011</span></p>
+	<p class="hukidashi-hide"><img src="img/profile_img_sample1.jpg" align="left"><span style="color:#1e90ff">ScreenName&nbsp;:&nbsp;</span><span style="background-color:transparent">tweet-hide</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 01:09:47 +0000 2011</span></p>
+	</div>
+      </div>
+
+      <div class="day" style="left: 530px;">
+	<a name="tweet1"><div class="tweets_box"></a>
+	<span>June 1, 2012</span>
+	<p><img src="img/profile_img_sample1.jpg" align="left"><span style="color:#1e90ff">ScreenName&nbsp;:&nbsp;</span><span style="background-color:transparent">tweet1</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jun 06 22:32:37 +0000 2011</span></p>
+	<p><img src="img/profile_img_sample1.jpg" align="left"><span style="color:#1e90ff">ScreenName&nbsp;:&nbsp;</span><span style="background-color:transparent">tweet</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sat Jun 29 06:36:34 +0000 2011</span></p>
+	<p class="hukidashi-hide"><img src="img/profile_img_sample1.jpg" align="left"><span style="color:#1e90ff">ScreenName&nbsp;:&nbsp;</span><span style="background-color:transparent">tweet-hide</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Mon Jun 07 22:57:07 +0000 2011</span></p>
+	<p class="hukidashi-hide"><img src="img/profile_img_sample1.jpg" align="left"><span style="color:#1e90ff">ScreenName&nbsp;:&nbsp;</span><span style="background-color:transparent">tweet-hide</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Mon Jun 07 15:47:30 +0000 2011</span></p>
+	<p class="hukidashi-hide"><img src="img/profile_img_sample1.jpg" align="left"><span style="color:#1e90ff">ScreenName&nbsp;:&nbsp;</span><span style="background-color:transparent">tweet-hide</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Mon May 31 18:28:31 +0000 2011</span></p>
+	</div>
+      </div>
+      <div class="month-box">
+	<div class="month-line">
+	  <h1>May</h1>
+	  <br>
+	  <hr>
+	</div>
+      </div>
+      <div class="month-box">
+	<div class="month-line">
+	  <h1>Apr</h1>
+	  <br>
+	  <hr>
+	</div>
+      </div>
+      <div class="day">
+	<a name="tweet2"><div class="tweets_box"></a>
+	<span>April 28, 2012</span>
+	<p><img src="img/profile_img_sample1.jpg" align="left"><span style="color:#1e90ff">ScreenName&nbsp;:&nbsp;</span><span style="background-color:transparent">tweet2</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Fri Apr 28 11:47:33 +0000 2011</span></p>
+	<p><img src="img/profile_img_sample1.jpg" align="left"><span style="color:#1e90ff">ScreenName&nbsp;:&nbsp;</span><span style="background-color:transparent">tweet</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Apr 30 01:51:21 +0000 2011</span></p>
+	<p><img src="img/profile_img_sample1.jpg" align="left"><span style="color:#1e90ff">ScreenName&nbsp;:&nbsp;</span><span style="background-color:transparent">tweet</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Apr 23 09:40:32 +0000 2011</span></p>
+	<p class="hukidashi-hide"><img src="img/profile_img_sample1.jpg" align="left"><span style="color:#1e90ff">ScreenName&nbsp;:&nbsp;</span><span style="background-color:transparent">tweet-hide</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Apr 23 20:55:21 +0000 2011</span></p>
+	<p class="hukidashi-hide"><img src="img/profile_img_sample1.jpg" align="left"><span style="color:#1e90ff">ScreenName&nbsp;:&nbsp;</span><span style="background-color:transparent">tweet-hide</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Apr 23 23:18:36 +0000 2011</span></p>
+	</div>
+      </div>
+
+    </div>
+    <div id="footer">
+      <hr>
+      <a href="http://localhost:8080/MicroblogSearcher/IndexPageSV">Topに戻る</a>
+    </div>
+    <script>
+      $(function() {
+      $(document).ready(function(){
+      $('.tweets_box > p').siblings('.hukidashi-hide').hide();
+      });
+      $('.tweets_box > p').click(function(){
+      $(this).siblings('.hukidashi-hide').slideToggle('slow');
+      });
+      $('#lambda_range').change(function() {
+      var lam1 = $('#lambda_range').val();
+      $('#lambda_value').val(lam1);
+      });
+      $('#lambda_value').change(function() {
+      var lam2 = $('#lambda_value').val();
+      $('#lambda_range').val(lam2);
+      });
+      $('#header > .other-ver').mouseover(function() {
+      $(this).css("color","white");
+      });
+      $('#header > .other-ver').mouseout(function() {
+      $(this).css("color","#999999");
+      });
+      $('#daycheck').change(function() {
+      $('.day-non').toggle();
+      });
+      $('#datepicker').datepicker({
+      dateFormat: 'yy/mm/dd',
+      changeMonth: true,
+      changeYear: true,
+      yearRange: '2011:2012',
+      showMonthAfterYear: false
+      });
+      });
+    </script>
+  </body>
+</html>

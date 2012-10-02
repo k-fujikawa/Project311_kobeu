@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta http-equiv="content-type" content="text/html" charset="UTF-8">
+    <!-- <link href="css/mycss3.css" rel="stylesheet"> -->
+    <link href="css/mircoblogCSS.css" rel="stylesheet">
+    <link type="text/css" href="css/jquery.ui.all.css" rel="stylesheet">
+    <title>Tweets2011 コーパス検索2</title>
+    <script src="js/jquery-1.7.2.min.js"></script>
+    <script type='text/javascript' src="js/jquery.ui.datepicker-ja.js"></script>
+    <script type='text/javascript' src="js/jquery.ui.core.js"></script>
+    <script type='text/javascript' src="js/jquery.ui.widget.js"></script>
+    <script type='text/javascript' src="js/jquery.ui.datepicker.js"></script>
+  </head>
+    <body>
+    <div class="contents">
+        <div class="navbar">
+           <div class="navbar-inner">
+               <h1>Microblog Searcher</h1>
+               <div id="serch-zone">
+                  <form action="" method="POST"><!-- ./MicroblogSearcherSV -->
+                     <p>
+                         <input type="search" name="QueryStr" size="40" required="required" value="rite"><!-- TODO -->
+                         <input type="submit" value="検索">
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      <span style="color:white;font-size:14.5px;">
+                         見つけるTweetの最大数
+                         <input type="text" name="hitnumber" pattern="^[0-9]+$" value="100" size="4">件
+                         <br>
+                     </span>
+                     </p>
+                  </form>
+               </div>
+           </div>
+        </div>
+        <div class="listContents">
+            <div class="leftList">
+                <div class="tweet">
+                    <div class="arrow_box">
+
+
+                    <div id="right_index1" class="right_arrow_box">
+                        <a name="tweet1"></a>
+                        <p>
+                            <span style="color:#1e90ff">RiaNurf&nbsp;:&nbsp;</span>
+                            <span style="background-color:transparent">@AnneLunalicious rite rite rite :) great job IMAGE. @MGTFest2011</span>
+                            <br>
+                            <span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 01:09:47 +0000 2011</span><hr>
+                        </p>
+
+                        <p><span style="color:#1e90ff">RiaNurf&nbsp;:&nbsp;</span><span style="background-color:transparent">@AnneLunalicious rite rite rite :) great job IMAGE. @MGTFest2011</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 01:09:47 +0000 2011</span><hr></p>
+                    </div>
+                        <a name="tweet0"></a>
+                        <p id="index1"><span style="color:#1e90ff">RiaNurf&nbsp;:&nbsp;</span><span style="background-color:transparent">@AnneLunalicious rite rite rite :) great job IMAGE. @MGTFest2011</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 01:09:47 +0000 2011</span><hr></p>
+                    <div id="right_index2" class="right_arrow_box">
+                        <a name="tweet1"></a>
+                        <p>
+                            <span style="color:#1e90ff">RiaNurf&nbsp;:&nbsp;</span>
+                            <span style="background-color:transparent">@AnneLunalicious rite rite rite :) great job IMAGE. @MGTFest2011</span>
+                            <br>
+                            <span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 01:09:47 +0000 2011</span><hr>
+                        </p>
+
+                        <p><span style="color:#1e90ff">RiaNurf&nbsp;:&nbsp;</span><span style="background-color:transparent">@AnneLunalicious rite rite rite :) great job IMAGE. @MGTFest2011</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 01:09:47 +0000 2011</span><hr></p>
+                    </div>
+
+                        <p id="index2"><span style="color:#1e90ff">RiaNurf&nbsp;:&nbsp;</span><span style="background-color:transparent">@AnneLunalicious rite rite rite :) great job IMAGE. @MGTFest2011</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 01:09:47 +0000 2011</span><hr></p>
+                    <div id="right_index3" class="right_arrow_box">
+                        <a name="tweet1"></a>
+                        <p>
+                            <span style="color:#1e90ff">RiaNurf&nbsp;:&nbsp;</span>
+                            <span style="background-color:transparent">@AnneLunalicious rite rite rite :) great job IMAGE. @MGTFest2011</span>
+                            <br>
+                            <span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 01:09:47 +0000 2011</span><hr>
+                        </p>
+
+                        <p><span style="color:#1e90ff">RiaNurf&nbsp;:&nbsp;</span><span style="background-color:transparent">@AnneLunalicious rite rite rite :) great job IMAGE. @MGTFest2011</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 01:09:47 +0000 2011</span><hr></p>
+                    </div>
+                        <p id="index3" class="hukidashi-hide"><span style="color:#1e90ff">CozyBcareful&nbsp;:&nbsp;</span><span style="background-color:transparent">@BNC22charlie --rite,rite..!</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Tue Feb 01 15:23:38 +0000 2011</span><hr class="hukidashi-hide"></p>
+
+                    <div id="right_index4" class="right_arrow_box">
+                        <a name="tweet1"></a>
+                        <p>
+                            <span style="color:#1e90ff">RiaNurf&nbsp;:&nbsp;</span>
+                            <span style="background-color:transparent">@AnneLunalicious rite rite rite :) great job IMAGE. @MGTFest2011</span>
+                            <br>
+                            <span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 01:09:47 +0000 2011</span><hr>
+                        </p>
+
+                        <p><span style="color:#1e90ff">RiaNurf&nbsp;:&nbsp;</span><span style="background-color:transparent">@AnneLunalicious rite rite rite :) great job IMAGE. @MGTFest2011</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 01:09:47 +0000 2011</span><hr></p>
+                    </div>
+
+                        <p id="index4" class="hukidashi-hide"><span style="color:#1e90ff">TmoneyDaBossO&nbsp;:&nbsp;</span><span style="background-color:transparent">@KENyoudiggit rite rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Fri Jan 28 05:07:37 +0000 2011</span><hr class="hukidashi-hide"></p>
+
+                    <div id="right_index5" class="right_arrow_box">
+                        <a name="tweet1"></a>
+                        <p>
+                            <span style="color:#1e90ff">RiaNurf&nbsp;:&nbsp;</span>
+                            <span style="background-color:transparent">@AnneLunalicious rite rite rite :) great job IMAGE. @MGTFest2011</span>
+                            <br>
+                            <span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 01:09:47 +0000 2011</span><hr>
+                        </p>
+
+                        <p><span style="color:#1e90ff">RiaNurf&nbsp;:&nbsp;</span><span style="background-color:transparent">@AnneLunalicious rite rite rite :) great job IMAGE. @MGTFest2011</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 01:09:47 +0000 2011</span><hr></p>
+                    </div>
+                        <p id="index5" class="hukidashi-hide"><span style="color:#1e90ff">MsNewEra&nbsp;:&nbsp;</span><span style="background-color:transparent">@GREEDYGIDDY lmao rite rite !</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Fri Jan 28 11:53:27 +0000 2011</span><hr class="hukidashi-hide"></p>
+
+                    <div id="right_index6" class="right_arrow_box">
+                        <a name="tweet1"></a>
+                        <p>
+                            <span style="color:#1e90ff">RiaNurf&nbsp;:&nbsp;</span>
+                            <span style="background-color:transparent">@AnneLunalicious rite rite rite :) great job IMAGE. @MGTFest2011</span>
+                            <br>
+                            <span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 01:09:47 +0000 2011</span><hr>
+                        </p>
+
+                        <p><span style="color:#1e90ff">RiaNurf&nbsp;:&nbsp;</span><span style="background-color:transparent">@AnneLunalicious rite rite rite :) great job IMAGE. @MGTFest2011</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 01:09:47 +0000 2011</span><hr></p>
+                    </div>
+                        <p id="index6" class="hukidashi-hide"><span style="color:#1e90ff">lean1on1&nbsp;:&nbsp;</span><span style="background-color:transparent">@envy2aww2010 rite!</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 23 16:46:28 +0000 2011</span><hr class="hukidashi-hide"></p>
+
+                    <div id="right_index7" class="right_arrow_box">
+                        <a name="tweet1"></a>
+                        <p>
+                            <span style="color:#1e90ff">RiaNurf&nbsp;:&nbsp;</span>
+                            <span style="background-color:transparent">@AnneLunalicious rite rite rite :) great job IMAGE. @MGTFest2011</span>
+                            <br>
+                            <span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 01:09:47 +0000 2011</span><hr>
+                        </p>
+
+                        <p><span style="color:#1e90ff">RiaNurf&nbsp;:&nbsp;</span><span style="background-color:transparent">@AnneLunalicious rite rite rite :) great job IMAGE. @MGTFest2011</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 01:09:47 +0000 2011</span><hr></p>
+                    </div>
+                        <p id="index7" class="hukidashi-hide"><span style="color:#1e90ff">filapinamix&nbsp;:&nbsp;</span><span style="background-color:transparent">@DamnHeYella rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 23 17:20:14 +0000 2011</span><hr class="hukidashi-hide"></p>
+
+                    <div id="right_index8" class="right_arrow_box">
+                        <a name="tweet1"></a>
+                        <p>
+                            <span style="color:#1e90ff">RiaNurf&nbsp;:&nbsp;</span>
+                            <span style="background-color:transparent">@AnneLunalicious rite rite rite :) great job IMAGE. @MGTFest2011</span>
+                            <br>
+                            <span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 01:09:47 +0000 2011</span><hr>
+                        </p>
+
+                        <p><span style="color:#1e90ff">RiaNurf&nbsp;:&nbsp;</span><span style="background-color:transparent">@AnneLunalicious rite rite rite :) great job IMAGE. @MGTFest2011</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 01:09:47 +0000 2011</span><hr></p>
+                    </div>
+                        <p id="index8" class="hukidashi-hide"><span style="color:#1e90ff">Chris_Seepersad&nbsp;:&nbsp;</span><span style="background-color:transparent">@Trilla_Tizzle rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Jan 23 19:56:41 +0000 2011</span><hr class="hukidashi-hide"></p>
+
+                    <div id="right_index9" class="right_arrow_box">
+                        <a name="tweet1"></a>
+                        <p>
+                            <span style="color:#1e90ff">RiaNurf&nbsp;:&nbsp;</span>
+                            <span style="background-color:transparent">@AnneLunalicious rite rite rite :) great job IMAGE. @MGTFest2011</span>
+                            <br>
+                            <span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 01:09:47 +0000 2011</span><hr>
+                        </p>
+
+                        <p><span style="color:#1e90ff">RiaNurf&nbsp;:&nbsp;</span><span style="background-color:transparent">@AnneLunalicious rite rite rite :) great job IMAGE. @MGTFest2011</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 01:09:47 +0000 2011</span><hr></p>
+                    </div>
+                        <p id="index9" class="hukidashi-hide"><span style="color:#1e90ff">iChArnold&nbsp;:&nbsp;</span><span style="background-color:transparent">@ChanelPretty rite</span><br><span style="color:#1e90ff">&nbsp;:&nbsp;Thu Feb 03 14:38:28 +0000 2011</span><hr class="hukidashi-hide"></p>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="rightList">
+                <div class="tweet">
+                    <div class="right_arrow_box">
+                        <a name="tweet0"></a>
+                        <p>
+                            <span style="color:#1e90ff">RiaNurf&nbsp;:&nbsp;</span>
+                            <span style="background-color:transparent">@AnneLunalicious rite rite rite :) great job IMAGE. @MGTFest2011</span>
+                            <br>
+                            <span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 01:09:47 +0000 2011</span>
+                        </p>
+                        <hr>
+                        <p>
+                            <span style="color:#1e90ff">RiaNurf&nbsp;:&nbsp;</span>
+                            <span style="background-color:transparent">@AnneLunalicious rite rite rite :) great job IMAGE. @MGTFest2011</span>
+                            <br>
+                            <span style="color:#1e90ff">&nbsp;:&nbsp;Sun Feb 06 01:09:47 +0000 2011</span>
+                        </p>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+    </div>
+
+
+
+
+        <script>
+      $(function() {
+	      $(document).ready(function(){
+		       $('.arrow_box > p').siblings('.hukidashi-hide').hide();
+
+		      $('#right_index9').hide();
+		      $('#right_index8').hide();
+		      $('#right_index7').hide();
+		      $('#right_index6').hide();
+		      $('#right_index5').hide();
+		      $('#right_index4').hide();
+		      $('#right_index3').hide();
+		      $('#right_index2').hide();
+		      $('#right_index1').hide();
+
+	      });
+
+	      var timer = null;
+
+	      $('.arrow_box > p').click(function(){
+	    	  clearTimeout(timer);
+	    	  var i=this;
+	      timer = setTimeout(function(){
+	    	  $(i).siblings('.hukidashi-hide').slideToggle('slow');
+	      }, 300);
+
+
+	      });
+
+
+
+          $('#index1').dblclick(function(){
+        	  clearTimeout(timer);
+
+	          $('#right_index9').hide();
+	          $('#right_index8').hide();
+	          $('#right_index7').hide();
+	          $('#right_index6').hide();
+	          $('#right_index5').hide();
+	          $('#right_index4').hide();
+	          $('#right_index3').hide();
+	          $('#right_index2').hide();
+	    	  $('#right_index1').show();
+	      });
+
+	      $('#index2').dblclick(function(){
+	    	  clearTimeout(timer);
+	    	  $('#right_index9').hide();
+	          $('#right_index8').hide();
+	          $('#right_index7').hide();
+	          $('#right_index6').hide();
+	          $('#right_index5').hide();
+	          $('#right_index4').hide();
+	          $('#right_index3').hide();
+	          $('#right_index1').hide();
+	          $('#right_index2').show();
+	      });
+
+	      $('#index3').dblclick(function(){
+	    	  clearTimeout(timer);
+	    	  $('#right_index9').hide();
+	          $('#right_index8').hide();
+	          $('#right_index7').hide();
+	          $('#right_index6').hide();
+	          $('#right_index5').hide();
+	          $('#right_index4').hide();
+	          $('#right_index2').hide();
+	          $('#right_index1').hide();
+	          $('#right_index3').show();
+	      });
+
+	      $('#index4').dblclick(function(){
+	    	  clearTimeout(timer);
+	    	  $('#right_index9').hide();
+	          $('#right_index8').hide();
+	          $('#right_index7').hide();
+	          $('#right_index6').hide();
+	          $('#right_index5').hide();
+	          $('#right_index3').hide();
+	          $('#right_index2').hide();
+	          $('#right_index1').hide();
+	          $('#right_index4').show();
+	      });
+
+	      $('#index5').dblclick(function(){
+	    	  clearTimeout(timer);
+	    	  $('#right_index9').hide();
+	          $('#right_index8').hide();
+	          $('#right_index7').hide();
+	          $('#right_index6').hide();
+	          $('#right_index4').hide();
+	          $('#right_index3').hide();
+	          $('#right_index2').hide();
+	          $('#right_index1').hide();
+	          $('#right_index5').show();
+	      });
+
+	      $('#index6').dblclick(function(){
+	    	  clearTimeout(timer);
+	    	  $('#right_index9').hide();
+	          $('#right_index8').hide();
+	          $('#right_index7').hide();
+	          $('#right_index5').hide();
+	          $('#right_index4').hide();
+	          $('#right_index3').hide();
+	          $('#right_index2').hide();
+	          $('#right_index1').hide();
+	          $('#right_index6').show();
+	      });
+
+	      $('#index7').dblclick(function(){
+	    	  clearTimeout(timer);
+	    	  $('#right_index9').hide();
+	          $('#right_index8').hide();
+	          $('#right_index6').hide();
+	          $('#right_index5').hide();
+	          $('#right_index4').hide();
+	          $('#right_index3').hide();
+	          $('#right_index2').hide();
+	          $('#right_index1').hide();
+	          $('#right_index7').show();
+	      });
+
+	      $('#index8').dblclick(function(){
+	    	  clearTimeout(timer);
+	    	  $('#right_index9').hide();
+	          $('#right_index7').hide();
+	          $('#right_index6').hide();
+	          $('#right_index5').hide();
+	          $('#right_index4').hide();
+	          $('#right_index3').hide();
+	          $('#right_index2').hide();
+	          $('#right_index1').hide();
+	          $('#right_index8').show();
+	      });
+
+	      $('#index9').dblclick(function(){
+	    	  clearTimeout(timer);
+	    	  $('#right_index8').hide();
+	          $('#right_index7').hide();
+	          $('#right_index6').hide();
+	          $('#right_index5').hide();
+	          $('#right_index4').hide();
+	          $('#right_index3').hide();
+	          $('#right_index2').hide();
+	          $('#right_index1').hide();
+	          $('#right_index9').show();
+	      });
+
+      });
+    </script>
+    </body>
+</html>

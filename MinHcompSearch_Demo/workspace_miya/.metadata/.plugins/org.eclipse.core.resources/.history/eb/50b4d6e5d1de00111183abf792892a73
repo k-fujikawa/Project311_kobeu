@@ -1,0 +1,104 @@
+package search;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+public class TemporalProfile {
+	boolean stem = false;
+	
+	RunQuery rq = new RunQuery();
+	TweetsDB db = new TweetsDB();
+	List<Map> tweets;
+	String query;
+
+	public TemporalProfile(String query_, int retnum) {
+		query = query_;
+		tweets = rq.search(query, retnum);
+	}
+
+	public String[] stem(String sent){
+		String[] terms = null;
+		if(stem){
+			
+		}else{
+			terms = sent.split(" ");
+		}
+		return terms;
+	}
+	
+
+	
+	// build query profile	
+	public List<DateScore> queryProfile(int top) {
+		List<DateScore> tp = new ArrayList<DateScore>();
+		for(int i=0; i<top; i++){
+			Map tweet = tweets.get(i);
+			String docno = (String) tweet.get("docno");
+			Double score = Double.valueOf((String) tweet.get("score"));
+			Date date = (Date) db.getTweet(docno).get("date");
+			DateScore ds = new DateScore(date, score);
+			tp.add(ds);
+		}
+		return tp;
+	}
+	
+	// build expanded query profile
+	public Map<String, List<DateScore>> exQueryProfile(int top,
+			List<String> cand_terms){
+		Set<String> cts = new HashSet(cand_terms);
+		Map<String, List<DateScore>> map = new HashMap<String, List<DateScore>>();
+		
+		for(int i=0; i<top; i++){
+			Map tweet = tweets.get(i);
+			String docno = (String) tweet.get("docno");
+			String tweet_str = (String) tweet.get("tweet");
+
+			for (String term : stem(tweet_str)){
+				// register a term
+				if(cts.contains(term)){
+					Double score = Double.valueOf((String) tweet.get("score"));
+					Date date = (Date) db.getTweet(docno).get("date");
+					DateScore ds = new DateScore(date, score);
+					List<DateScore> dsList = null;
+					if(map.containsKey(term)){
+						dsList = map.get(term);
+					}else{
+						dsList = new ArrayList<DateScore>();
+					}
+					dsList.add(ds);
+					map.put(term, dsList);
+				}
+			}
+		}
+		return map;
+	}
+
+	public void enFilter(float th){
+		List<Map> tweets_en = new ArrayList<Map>(); 
+		for(Map tweet : tweets){
+			String docno = (String) tweet.get("docno");
+			if(db.getLang(docno) < th){
+				continue;
+			}
+			tweets_en.add(tweet);
+		}
+		this.tweets= tweets_en; 
+	}
+	
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		float th = (float) 0.1;
+		String query = "FIFA soccer 2022";
+		int retnum = 1000;
+		TemporalProfile tp = new TemporalProfile(query, retnum);
+		tp.enFilter(th);
+		tp.tweets;
+	}
+}

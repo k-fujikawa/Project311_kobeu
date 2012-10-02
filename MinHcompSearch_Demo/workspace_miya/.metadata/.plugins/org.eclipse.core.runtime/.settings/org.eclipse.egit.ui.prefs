@@ -1,0 +1,9 @@
+commit_dialog_history_messages=<?xml version\="1.0" encoding\="UTF-8"?>\n<messages>\n<message>aaaa</message>\n<message>remove unneccessary file&\#x0A;</message>\n<message>remove comment&\#x0A;</message>\n<message>fix db&\#x0A;</message>\n<message>remove dygraph</message>\n<message>fix temporal_profile for phrase search</message>\n<message>first commit&\#x0A;</message>\n</messages>
+default_repository_dir=/Users/taiki/Dropbox/prog/java/workspace
+eclipse.preferences.version=1
+merge_mode=0
+resourcehistory_compare_mode=true
+resourcehistory_graph_split=500,500
+resourcehistory_rev_split=700,300
+resourcehistory_show_all_branches=true
+sync_view_show_changeset_model=true
