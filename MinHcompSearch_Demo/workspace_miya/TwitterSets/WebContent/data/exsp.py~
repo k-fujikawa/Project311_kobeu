@@ -1,0 +1,9 @@
+
+
+
+ls = []
+for l in open('stopwords'):
+    l = re.sub('<word>', '', l.strip())
+    l = re.sub('</word>', '', l.strip())
+    ls.append(l)
+
