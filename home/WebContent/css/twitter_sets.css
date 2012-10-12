@@ -1,0 +1,168 @@
+
+body{
+    padding:80px
+}
+
+.logo{
+    text-align:center;
+}
+
+.query{
+	margin-top:-10px;
+    text-align:center;
+    padding:10px;
+}
+
+.center{
+    text-align: center;
+}
+
+.ex1{
+    text-align:center;
+    font-size:13px;
+}
+
+.ex2{
+    text-align:center;
+    font-size:16px;
+    padding:30px;
+}
+
+.howto{
+	text-align:center;
+	font-size:16px;
+	margin-top:-15px;	
+	margin-bottom:5px;	
+}
+
+.q{
+    text-align:center;
+    width:10px
+}
+
+.center{
+	margin-left: auto; 
+    margin-right: auto;
+	
+}
+
+.tag:hover{
+   font-weight: bold;
+    /* text-decoration: underline; */
+}
+
+.tagcloud{
+　　 margin-top: 20px;
+    margin-left: auto; 
+    margin-right: auto;
+	width: 600px;
+    height: 210px;
+}
+
+
+div.tweets{  
+	margin-left: auto; 
+    margin-right: auto;
+    width: 550px;
+    height: 210px;
+}
+
+div.chart_div{
+	margin-left: auto; 
+	margin-right: auto;
+	width: 700px;
+	height: 400px;
+}
+
+
+div.websearch{
+	position:relative;
+	margin-top: 200px;
+	margin-left: auto;
+	margin-right: auto;
+	width: 600px;
+}
+
+.tweet-results {
+	margin-left: auto; 
+	margin-right: auto;
+	margin-top: 30px;
+}
+
+.tweet-results .tweet-result {
+	margin-left: -40px; 
+	list-style-type: none;
+}
+
+.tweet-result .tweet-holder p.tweet{
+    margin-top: -10px;
+	margin-left: auto; 
+	margin-right: auto;
+    width: 600px;
+    height: 40px;	
+}
+
+.tweet-result .tweet-content {
+	float: left
+}
+
+.tweet-result .tweet-content .tweet-holder {
+	width: 600px;
+    height: 80px;	
+}
+
+.tweet-content .tweet-holder span.uname{
+	font-weight: bold;
+	font-size: 15px;
+	font-family:Arial,Helvetica,sans-serif;
+	/* margin-left: 70px; */
+	margin-left: auto; 
+	margin-right: auto;
+	color:#000000;	
+}
+
+.tweet-content .tweet-holder span.date{
+	position: relative;
+	font-size: 13px;
+	top: -16px;
+	color:#A9A9A9;
+}
+
+.tweet-content .image-holder {
+	position: relative;
+	float: left;
+	margin-right: 10px;
+	overflow: hidden;
+	height: 60px;
+	width: 60px;
+	border: 1px solid #e1e1e1
+}
+
+.tweet-content .image-holder .user-icon {
+	height: 70px;
+	margin-left: -4px;
+	margin-top: -4px
+}
+
+span.deleteicon {
+ 	position: relative;
+}
+
+span.deleteicon span.bt {            
+	position: absolute;	            
+	display: block;                
+	top: 4.5px;                
+	right: 2px;                
+	width: 16px;                
+	height: 16px;                
+	background: url('http://cdn.sstatic.net/stackoverflow/img/sprites.png?v=4') 0 -690px;                
+	cursor: pointer;                
+}
+            
+span.deleteicon input {            
+	padding-right: 16px;                
+}            
+         
+
+
+                 
