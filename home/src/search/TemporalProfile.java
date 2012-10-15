@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -90,6 +91,12 @@ public class TemporalProfile {
 		return tweets.size();
 	}
 
+	/**
+	 * コンストラクタ.
+	 * @param rq RunQuery
+	 * @param query 合成済みクエリ
+	 * @param retnum 返すtweet数
+	 */
 	public TemporalProfile(RunQuery rq, String query, int retnum) {
 		this.rq = rq;
 		this.query = query;
@@ -351,7 +358,8 @@ public class TemporalProfile {
 		int L = 20;
 		double alpha = 0.9;
 		double enTh = 0.1;
-		RunQuery rq = new RunQuery("rubicon.cs.scitec.kobe-u.ac.jp", 5600);
+    //RunQuery rq = new RunQuery("rubicon.cs.scitec.kobe-u.ac.jp", 5600);
+    RunQuery rq = new RunQuery("localhost", 57000);
 		String query = rq.qs2query(qs, null);
 		TemporalProfile tp = new TemporalProfile(rq, query, retnum);
 		Map<String, Double> map = tp.TSQE(M, L, alpha, enTh);

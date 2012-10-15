@@ -1,6 +1,7 @@
 package search;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.DateFormat;
@@ -27,15 +28,33 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.apache.commons.math3.stat.StatUtils;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.search.similarities.BM25Similarity;
+import org.apache.lucene.search.similarities.Similarity;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 
 import com.mongodb.DBObject;
 
 public class RunQuery {
-	QueryEnvironment env;
-	TweetsDB db = new TweetsDB();
 	private String field = null;
 	private String index = null;
 	private String server = null;
+
+	// for Lucene
+	private Directory indexDir = null;
+  private IndexReader reader = null;
+  private IndexSearcher searcher = null;
+  private Similarity similarity = null;
+  private Analyzer analyzer = null;
 
 	public RunQuery(String index_) {
 		this.index = index_;
@@ -57,23 +76,24 @@ public class RunQuery {
 		return this.server;
 	}
 
-	public String qs2query(List<String> qs, String field) {
-		String qpre = "#combine";
-		if (field != null) {
-			qpre += "[" + field + "]";
-		}
-		StringBuffer sb = new StringBuffer(qpre + "(");
-		for (String q : qs) {
-			if (q.split(" ").length >= 2) {
-				sb.append(" #od(" + q + ")");
-			} else {
-				sb.append(" " + q);
-			}
-		}
-		sb.append(" )");
-		return sb.toString();
+	public String qs2query(List<String> qs, String filed) {
+    if (filed != null) {
+      this.field = filed;
+    } else {
+      this.field = "text";
+    }
+	  StringBuffer sb = new StringBuffer();
+    for (String q : qs ) {
+      if (q.split(" ").length >= 2) {
+        sb.append(" +" + q); // AND
+      } else {
+        sb.append(" " + q);  // OR
+      }
+    }
+    return sb.toString();
 	}
 
+	/*
 	public List<Map> search2(List<String> qs, int retnum) {
 		String[] names;
 		List<Map> list = new ArrayList<Map>();
@@ -159,49 +179,67 @@ public class RunQuery {
 		}
 		return list;
 	}
+*/
 
+	/**
+	 * Luceneを使った検索を行なって結果のList<Map>を返す
+	 * @param query 合成済みクエリ
+	 * @param retnum
+	 * @return
+	 */
 	public List<Map> search(String query, int retnum) {
-		String[] names;
-		List<Map> list = new ArrayList<Map>();
+    String[] names;
+    List<Map> list = new ArrayList<Map>();              // 検索結果のList<Map>
 
-		try {
-			env = new QueryEnvironment();
-			if (index != null) {
-				System.out.println("Add index : " + index);
-				env.addIndex(index);
-			} else if (server != null) {
-				System.out.println("Add server : " + server);
-				env.addServer(server);
-			} else {
-				System.err.println("You should specify index or server.");
-			}
-			// String query = qs2query(qs, field);
-			System.out.println("QUERY : " + query + "(" + retnum + ")");
-			System.out.println("Index : " + this.index);
-			System.out.println("Server : " + this.server);
+    try {
+      if (index != null) {                              // indexがセットされている時は、そのindexで検索
+        System.out.println("Add index : " + index);
+        indexDir = FSDirectory.open(new File(index));
+        reader = IndexReader.open(indexDir);
+        searcher = new IndexSearcher(reader);
+        similarity = new BM25Similarity();
+        //similarity = new DefaultSimilarity();
+        searcher.setSimilarity(similarity);
+        analyzer = new AnalyzerFactory(Version.LUCENE_40).getJapaneseEnglishAnalyzer();
+      } else if (server != null) {
+        System.out.println("Add server : " + server);   // サーバがセットされている時は、そのサーバで検索
+        System.err.println("Sorry, I don't know how to use Lucene on server...");
+      } else {                                          // indexかサーバどちらかがセットされていないとエラー
+        System.err.println("You should specify index or server.");
+      }
+      System.out.println("QUERY : " + query + "(" + retnum + ")");
+      System.out.println("Index : " + this.index);
+      System.out.println("Server : " + this.server);
 
-			ScoredExtentResult[] results = env.runQuery(query, retnum);
+      // 検索
+      QueryParser qp = new QueryParser(Version.LUCENE_40, field, analyzer);
+      Query luceneQuery = qp.parse(query);
+      TopDocs topDocs = searcher.search(luceneQuery, retnum);
+      ScoreDoc[] hits = topDocs.scoreDocs;
 
-			System.out.println("RetNum : " + results.length);
+      System.out.println("RetNum : " + hits.length);
 
-			names = env.documentMetadata(results, "docno");
-			for (int i = 0; i < results.length; i++) {
-				DBObject tweet_obj = db.getTweet(names[i]);
-				String tweet_str = (String) tweet_obj.get("tweet");
-				Date date = (Date) tweet_obj.get("date");
+      for (int i=0; i<hits.length; i++) {
+        int docId = hits[i].doc;
+        Document doc = searcher.doc(docId);
 
-				Map map = new HashMap<String, String>();
-				map.put("score", results[i].score);
-				map.put("tweetid", names[i]);
-				map.put("date", date);
-				map.put("tweet", tweet_str);
-				list.add(map);
-			}
-			env.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return list;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date datetime = sdf.parse(doc.get("datetime"));
+
+        Map map = new HashMap<String, String>();
+        map.put("score", new Double(hits[i].score));
+        map.put("tweetid", (String) doc.get("tweet_id"));
+        map.put("userid", (String) doc.get("user_id"));
+        map.put("date", datetime);
+        map.put("tweet", (String) doc.get("text"));
+        list.add(map);
+      }
+      indexDir.close();
+      reader.close();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return list;
 	}
 
 	public Map<String, Double> tagcloud(Map<String, Double> map_) {
@@ -250,7 +288,7 @@ public class RunQuery {
 
 	/**
 	 * Make temporal profile from retrieved tweets
-	 * 
+	 *
 	 * @param tweets
 	 * @return
 	 */
@@ -274,7 +312,7 @@ public class RunQuery {
 
 	/**
 	 * Make chart for the temporal profile of a word
-	 * 
+	 *
 	 * @param tp_map
 	 * @return
 	 */
@@ -319,6 +357,11 @@ public class RunQuery {
 		return sum;
 	}
 
+	/**
+	 * 引数のクエリリストに少なくとも1つクエリが含まれているかを調べる.<br>
+	 * @param qs
+	 * @return クエリリストに少なくとも1つクエリが含まれるときtrue / すべて空またはnullのときfalse
+	 */
 	public boolean queryCheck(List<String> qs) {
 		for (String q : qs) {
 			if (q != "" && q != null) {
@@ -329,23 +372,25 @@ public class RunQuery {
 	}
 
 	/**
-	 * @param args
+	 * @param args[0] 索引のパス
 	 */
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
-		List<String> query = new ArrayList<String>();
-		query.add("the rite");
-		query.add("movie");
-		//query.add("fifa");
-		//query.add("soccer");
-		//query.add("2022");
-		int retnum = 10;
-		RunQuery rq = new RunQuery("rubicon.cs.scitec.kobe-u.ac.jp", 5600);
-		List<Map> tweets = rq.search(rq.qs2query(query, null), retnum);
-		for (Map tweet : tweets) {
-			Object[] t = { tweet.get("score"), tweet.get("tweetid"),
-					tweet.get("date"), tweet.get("tweet") };
-			System.out.println(StringUtils.join(t, "\t"));
-		}
+    List<String> query = new ArrayList<String>();
+    query.add("福島");
+    query.add("地震情報");
+    //query.add("fifa");
+    //query.add("soccer");
+    //query.add("2022");
+    int retnum = 10;
+    //RunQuery rq = new RunQuery("rubicon.cs.scitec.kobe-u.ac.jp", 5600);
+    RunQuery rq = new RunQuery("/Users/kitaguchisayaka/Project/Project311/indexAllField");
+    //List<Map> tweets = rq.search(rq.qs2query(query, null), retnum);
+    List<Map> tweets = rq.search(rq.qs2query(query, null), retnum);
+    for (Map tweet : tweets) {
+      Object[] t = { tweet.get("score"), tweet.get("tweetid"),
+          tweet.get("date"), tweet.get("tweet") };
+      System.out.println(StringUtils.join(t, "\t"));
+    }
 	}
 }
