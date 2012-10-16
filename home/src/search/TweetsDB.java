@@ -13,23 +13,31 @@ public class TweetsDB {
 	Mongo m;
 	DB db;
 
+	/**
+	 * データベースを取得して，フィールドにセットする
+	 */
 	public TweetsDB() {
 		try {
-			m = new Mongo();
-			db = m.getDB("tweet_database");
+			m = new Mongo();                  // データベースに接続
+			db = m.getDB("tweet_database");   // データベース"tweet_database"を取得
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
 	}
 
+	/**
+	 * htmlsコレクションの"tweetid"フィールドから文字列docnoを検索する
+	 * @param docno "tweetid"フィールドから検索したい文字列
+	 * @return 検索結果のDBObject，検索結果が存在しない時はnull
+	 */
 	public DBObject getTweet(String docno) {
-		DBCollection coll = db.getCollection("htmls");
+		DBCollection coll = db.getCollection("htmls"); // コレクション"htmls"を取得
 		BasicDBObject query = new BasicDBObject();
-		query.put("tweetid", docno);
+		query.put("tweetid", docno);                   // "tweetid"フィールドから文字列docnoを検索するクエリ
 		DBCursor cursor = coll.find(query);
 
 		try {
-			while (cursor.hasNext()) {
+			while (cursor.hasNext()) {                   // 検索結果があるとき，それを返す
 				// System.out.println(cursor.next());
 				return cursor.next();
 			}
@@ -39,10 +47,11 @@ public class TweetsDB {
 		return null;
 	}
 
+
 	public Double getLang(String docno) {
-		DBCollection coll = db.getCollection("language");
+		DBCollection coll = db.getCollection("language"); // コレクション"language"を取得
 		BasicDBObject query = new BasicDBObject();
-		query.put("tweetid", docno);
+		query.put("tweetid", docno);                      // "tweetid"フィールドから文字列docnoを検索するクエリ
 		DBCursor cursor = coll.find(query);
 		try {
 			while (cursor.hasNext()) {

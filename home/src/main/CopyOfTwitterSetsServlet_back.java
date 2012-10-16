@@ -58,8 +58,9 @@ public class CopyOfTwitterSetsServlet_back extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    //RunQuery rq = new RunQuery(hostname, port);
-    RunQuery rq = new RunQuery("/Users/kitaguchisayaka/Project/Project311/indexAllField");
+    response.setContentType("text/html; charset=UTF-8");
+	  //RunQuery rq = new RunQuery(hostname, port);
+    RunQuery rq = new RunQuery("/Users/kitaguchisayaka/Project/Project311/indexAllField3000");
 	  Gson gs = new Gson();                          // Gson = JSONをJavaオブジェクトにする
     PrintWriter out = response.getWriter();
     List<String> qs = new ArrayList<String>();     // クエリを入れるArrayList生成
@@ -107,6 +108,7 @@ public class CopyOfTwitterSetsServlet_back extends HttpServlet {
     }
     /* expanded query processing */
     else if (rq.queryCheck(qs)  && cw != null) {
+      System.out.println("ok");
       List<String> eqs = new ArrayList<String>(qs);
       eqs.add(cw);
       String equery = rq.qs2query(eqs, null);

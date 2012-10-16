@@ -21,12 +21,43 @@ public class AnalyzerFactory {
   }
 
   /**
-   * デフォルト設定のJapaneseEnglishAnalyzerを返す
+   * デフォルト設定+サーチモードのJapaneseEnglishAnalyzerを返す
    * @return デフォルト設定のJapaneseEnglishAnalyzer
    */
+  @Deprecated
   public Analyzer getJapaneseEnglishAnalyzer() {
     CharArraySet stopwords = getStopWordsCharArraySet();
     Analyzer analyzer = new JapaneseEnglishAnalyzer(version, null, JapaneseTokenizer.Mode.SEARCH, stopwords, JapaneseAnalyzer.getDefaultStopTags());
+    return analyzer;
+  }
+
+  /**
+   * デフォルト設定+ノーマルモードのJapaneseEnflishAnalyzerを返す
+   * @return デフォルト設定+ノーマルモードのJapaneseAnalyzer
+   */
+  public Analyzer getJapaneseEnglishAnalyzerNormal() {
+    CharArraySet stopwords = getStopWordsCharArraySet();
+    Analyzer analyzer = new JapaneseEnglishAnalyzer(version, null, JapaneseTokenizer.Mode.NORMAL, stopwords, JapaneseAnalyzer.getDefaultStopTags());
+    return analyzer;
+  }
+
+  /**
+   * デフォルト設定+サーチモードのJapaneseEnglishAnalyzerを返す
+   * @return デフォルト設定のJapaneseEnglishAnalyzer
+   */
+  public Analyzer getJapaneseEnglishAnalyzerSearch() {
+    CharArraySet stopwords = getStopWordsCharArraySet();
+    Analyzer analyzer = new JapaneseEnglishAnalyzer(version, null, JapaneseTokenizer.Mode.SEARCH, stopwords, JapaneseAnalyzer.getDefaultStopTags());
+    return analyzer;
+  }
+
+  /**
+   * デフォルト設定+拡張モードのJapaneseEnglishAnalyzerを返す
+   * @return デフォルト設定のJapaneseEnglishAnalyzer
+   */
+  public Analyzer getJapaneseEnglishAnalyzerExtended() {
+    CharArraySet stopwords = getStopWordsCharArraySet();
+    Analyzer analyzer = new JapaneseEnglishAnalyzer(version, null, JapaneseTokenizer.Mode.EXTENDED, stopwords, JapaneseAnalyzer.getDefaultStopTags());
     return analyzer;
   }
 

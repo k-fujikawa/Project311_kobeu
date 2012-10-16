@@ -76,6 +76,12 @@ public class RunQuery {
 		return this.server;
 	}
 
+	/**
+	 * クエリ文字列を合成する
+	 * @param qs クエリ文字列のリスト
+	 * @param filed 検索するフィールド
+	 * @return 合成されたクエリ文字列
+	 */
 	public String qs2query(List<String> qs, String filed) {
     if (filed != null) {
       this.field = filed;
@@ -84,11 +90,12 @@ public class RunQuery {
     }
 	  StringBuffer sb = new StringBuffer();
     for (String q : qs ) {
-      if (q.split(" ").length >= 2) {
+      sb.append(" " + q);
+      /*if (q.split(" ").length >= 2) {
         sb.append(" +" + q); // AND
       } else {
         sb.append(" " + q);  // OR
-      }
+      }*/
     }
     return sb.toString();
 	}

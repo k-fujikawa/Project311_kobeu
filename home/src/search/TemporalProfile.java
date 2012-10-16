@@ -1,5 +1,7 @@
 package search;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,6 +15,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.util.Version;
 
 public class TemporalProfile {
 	static String urlpat = "(http://|https://){1}[\\w\\.\\-/:\\#\\?\\=\\&\\;\\%\\~\\+]+";
@@ -113,6 +119,11 @@ public class TemporalProfile {
 	// stopwords = new HashSet<String>(Arrays.asList(sws));
 	// }
 
+	/**
+	 * tweet本文に含まれる単語の配列を受け取って、ストップワードと1文字以下の単語を除去する。
+	 * @param terms_ tweet本文に含まれる単語の配列
+	 * @return ストップワードと1文字以下の単語が除かれた単語の配列
+	 */
 	public String[] stop(String[] terms_) {
 		List<String> terms = new ArrayList<String>();
 		for (int i = 0; i < terms_.length; i++) {
@@ -129,31 +140,94 @@ public class TemporalProfile {
 		return terms;
 	}
 
-	public String[] prepro(String sent) {
+	/**
+	 * tweet本文からURLを除去、また英数字以外も除去．
+	 * 単語ごとに分割し、String[]として返す
+	 * @param sent tweet本文
+	 * @return 単語(String)の配列
+	 */
+	public String[] prepro_(String sent) {
 		String[] terms = null;
 		// System.out.println(sent);
-		sent = sent.toLowerCase();
-		sent = sent.replaceAll(urlpat, " ");
-		sent = sent.replaceAll("[^a-z0-9]", " ");
-		sent = sent.replaceAll(" +", " ");
-		terms = sent.split(" ");
+		sent = sent.toLowerCase();                 // textをすべて小文字に
+		sent = sent.replaceAll(urlpat, " ");       // textからURL除去
+		sent = sent.replaceAll("[^a-z0-9]", " ");  // 英数字以外を除去
+		sent = sent.replaceAll(" +", " ");         // 空白の連続を1つにマージ
+		terms = sent.split(" ");                   // 単語の集合が出来上がり（ストップワード等そのまま）
 		return terms;
 	}
 
-	public Set<String> candTerms(int top) {
+	/**
+	 * Japanese対応版
+   * tweet本文からURLを除去、また英数字以外も除去．
+   * 単語ごとに分割し、String[]として返す
+   * @param sent tweet本文
+   * @return 単語(String)の配列
+   */
+  public String[] prepro(String sent) {
+    List<String> termList = new ArrayList<String>();
+    Analyzer analyzer = new AnalyzerFactory(Version.LUCENE_40).getJapaneseEnglishAnalyzerSearch();
+    // System.out.println(sent);
+    sent = sent.toLowerCase();                 // textをすべて小文字に
+    sent = sent.replaceAll(urlpat, " ");       // textからURL除去
+    StringReader sReader = new StringReader(sent);
+    try {
+      TokenStream stream = analyzer.tokenStream("", sReader);
+      while (stream.incrementToken()) {
+        CharTermAttribute termAtt
+        = stream.getAttribute(CharTermAttribute.class); //単語そのものを取り出す
+        termList.add(termAtt.toString());
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    String[] terms = (String[]) termList.toArray(new String[termList.size()]);
+    return terms;
+  }
+
+	/**
+	 * ヒットしたtweetに登場した単語のセットを返す（重複なし）
+	 * @param top
+	 * @return ヒットしたtweetに登場した単語のセット（重複なし）
+	 */
+	public Set<String> candTerms_(int top) {
 		Set<String> terms = new HashSet<String>();
 		for (int i = 0; i < top && i < tweets.size(); i++) {
 			Map tweet = tweets.get(i);
-			String tweetid = (String) tweet.get("tweetid");
-			String tweet_str = (String) tweet.get("tweet");
-			String[] terms_ = prepro(tweet_str);
-			terms_ = stop(terms_);
-			terms.addAll(Arrays.asList(terms_));
+			String tweetid = (String) tweet.get("tweetid"); // tweet_id 取得
+			String tweet_str = (String) tweet.get("tweet"); // text 取得
+			String[] terms_ = prepro(tweet_str);            // textに含まれる単語のリストを生成
+			terms_ = stop(terms_);                          // ストップワードと1文字以下の単語を除去
+			terms.addAll(Arrays.asList(terms_));            // 配列中の単語(String)をSetに追加。同じ単語はマージされる
 		}
 		return terms;
 	}
 
+	 /**
+	  * Japanese対応版
+   * ヒットしたtweetに登場した単語のセットを返す（重複なし）
+   * @param top
+   * @return ヒットしたtweetに登場した単語のセット（重複なし）
+   */
+  public Set<String> candTerms(int top) {
+    Set<String> terms = new HashSet<String>();
+    for (int i = 0; i < top && i < tweets.size(); i++) {
+      Map tweet = tweets.get(i);
+      String tweetid = (String) tweet.get("tweetid"); // tweet_id 取得
+      String tweet_str = (String) tweet.get("tweet"); // text 取得
+      String[] terms_ = prepro(tweet_str);            // textに含まれる単語のリストを生成
+      terms_ = stop(terms_);                          // ストップワードと1文字以下の単語を除去
+      terms.addAll(Arrays.asList(terms_));            // 配列中の単語(String)をSetに追加。同じ単語はマージされる
+    }
+    return terms;
+  }
+
+
 	// build query profile
+	/**
+	 * ヒットした全てのtweetの、exp(ヒットしたtweetのスコア)と、dateを持つクラスDateScore、のリストを返す。
+	 * @return
+	 */
 	public List<DateScore> queryProfile() {
 		List<DateScore> tp = new ArrayList<DateScore>();
 		for (Map tweet : tweets) {
@@ -168,10 +242,17 @@ public class TemporalProfile {
 	}
 
 	// build expanded query profile
+	/**
+	 * 単語ごとに、登場した日付とその日のexp(スコア)の組をリストで返す。
+	 * Map<String, List<DateScore>> = Map< 単語, <DateScore, DateScore, ...> >
+	 * ここで、DateScoreは[ 日付, exp(スコア) ]
+	 * @param cand_terms ヒットしたtweetに登場した単語のリスト（重複なし）
+	 * @return
+	 */
 	public Map<String, List<DateScore>> exQueryProfile(Set<String> cand_terms) {
 		Set<String> cts = new HashSet();
-		for (String cand_term : cand_terms) {
-			cts.add(cand_term.toLowerCase());
+		for (String cand_term : cand_terms) { // 登場単語を1つずつ取り出して
+			cts.add(cand_term.toLowerCase());   // 小文字にして複製
 		}
 
 		Map<String, List<DateScore>> map = new HashMap<String, List<DateScore>>();
@@ -179,13 +260,13 @@ public class TemporalProfile {
 			String tweetid = (String) tweet.get("tweetid");
 			String tweet_str = (String) tweet.get("tweet");
 
-			for (String term : prepro(tweet_str)) {
+			for (String term : prepro(tweet_str)) {  // 不要なものを除去した単語、ごとに
 				// register a term
-				if (cts.contains(term)) {
-					Double score = (Double) tweet.get("score");
-					Date date = (Date) tweet.get("date");
-					score = Math.exp(score);
-					DateScore ds = new DateScore(date, score);
+				if (cts.contains(term)) {                     // その単語が既に登場していた場合
+					Double score = (Double) tweet.get("score"); // tweetのスコア取得
+					Date date = (Date) tweet.get("date");       // tweetの日付取得
+					score = Math.exp(score);                    // exp(スコア)
+					DateScore ds = new DateScore(date, score);  // その日付とスコアの組
 					List<DateScore> dsList = null;
 					if (map.containsKey(term)) {
 						dsList = map.get(term);
@@ -193,29 +274,37 @@ public class TemporalProfile {
 						dsList = new ArrayList<DateScore>();
 					}
 					dsList.add(ds);
-					map.put(term, dsList);
+					map.put(term, dsList);                      //
 				}
 			}
 		}
 		return map;
 	}
 
+	/**
+	 * 日毎に、その日にヒットしたtweetのスコアを全体スコアで割ったものを計算。
+	 * Map<Date, Double> = HashMap<年月日, その日のtweetの総スコアを全体スコアで割ったもの(総スコアにおけるその日のスコアの割合)>
+	 * @param dsList
+	 * @param top
+	 * @return
+	 */
 	public Map<Date, Double> temporalModel(List<DateScore> dsList, int top) {
 		Map<Date, Double> tmDic = new HashMap<Date, Double>();
 		List<DateScore> tmp = new ArrayList<DateScore>();
 		double scoreAll = 0;
 
+		// dsListをtmpに複製
 		for (int i = 0; i < top && i < dsList.size(); i++) {
 			DateScore df = dsList.get(i);
 			tmp.add(df);
 		}
 		for (DateScore ds : tmp) {
-			scoreAll += ds.score;
+			scoreAll += ds.score;     // 全スコアの合計
 		}
-		for (DateScore ds : tmp) {
+		for (DateScore ds : tmp) { // DateScoreを1つずつ取り出して
 			Date d = new Date(ds.date.getYear(), ds.date.getMonth(),
 					ds.date.getDate());
-			if (tmDic.containsKey(d)) {
+			if (tmDic.containsKey(d)) { // 同一年月日が既にtmDicにあるとき
 				tmDic.put(d, tmDic.get(d) + ds.score / scoreAll);
 			} else {
 				tmDic.put(d, ds.score / scoreAll);
@@ -236,8 +325,14 @@ public class TemporalProfile {
 	// this.tweets = tweets_en;
 	// }
 
+	/**
+	 * @param tempModelA ヒットした全てのtweet分だけの、日付とその日の正規化スコアのマップ
+	 * @param tempModelB 対象の単語が登場した日付ごとの、日付とその日の正規化スコアのマップ
+	 * @param alpha
+	 * @return
+	 */
 	public double KLdiv(Map<Date, Double> tempModelA,
-			Map<Date, Double> tempModelB, double alpha) {
+	    Map<Date, Double> tempModelB, double alpha) {
 		List<Date> dates = new ArrayList<Date>();
 		for (Date d : tempModelB.keySet())
 			dates.add(d);
@@ -247,7 +342,7 @@ public class TemporalProfile {
 		// System.exit(-1);
 		// System.out.println(dates);
 		double kl = 0;
-		for (Date date : new HashSet<Date>(dates)) {
+		for (Date date : new HashSet<Date>(dates)) { // 2つのMapから取り出したDateをマージ(重複を削除)
 			double probA = 0;
 			double probB = 0;
 			if (tempModelA.containsKey(date)) {
@@ -271,13 +366,13 @@ public class TemporalProfile {
 		Map<String, Double> klDic = new HashMap();
 		Set<String> candTerms = new HashSet<String>();
 		// enFilter(enTh);
-		candTerms = candTerms(M);
-		Map<Date, Double> tempQueryModel = temporalModel(queryProfile(), L);
-		Map<String, List<DateScore>> exQueryProfiles = exQueryProfile(candTerms);
+		candTerms = candTerms(M); // ヒットしたtweetに登場した単語のリスト（重複なし）
+		Map<Date, Double> tempQueryModel = temporalModel(queryProfile(), L);   // ヒットした全てのtweet分だけ、日付とその日の正規化スコアのマップを生成
+		Map<String, List<DateScore>> exQueryProfiles = exQueryProfile(candTerms); // 単語と、その単語が登場したtweetの日付とexp(スコア)のマップを作成
 		Map<String, Double> klScoreList = new HashMap<String, Double>();
-		for (String term : exQueryProfiles.keySet()) {
-			List<DateScore> exQueryProfile = exQueryProfiles.get(term);
-			Map<Date, Double> tempExQueryModel = temporalModel(exQueryProfile,
+		for (String term : exQueryProfiles.keySet()) {                         // 単語を1つずつ取り出して
+			List<DateScore> exQueryProfile = exQueryProfiles.get(term);          // その単語に対応するDateScoreのリストを取得
+			Map<Date, Double> tempExQueryModel = temporalModel(exQueryProfile,   // その単語が登場した日付ごとに、日付とその日の正規化スコアのマップを作成
 					L);
 			Double klScore = KLdiv(tempQueryModel, tempExQueryModel, alpha);
 			klDic.put(term, klScore);
