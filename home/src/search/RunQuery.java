@@ -21,8 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import lemurproject.indri.QueryEnvironment;
-import lemurproject.indri.ScoredExtentResult;
+
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;

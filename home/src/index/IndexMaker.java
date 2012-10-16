@@ -44,7 +44,7 @@ public class IndexMaker {
     // インデックスディレクトリを開く
     Directory index = FSDirectory.open(new File(pathOfIndex));
     // IndexWriterクラスの設定クラス
-    IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_36, analyzer);
+    IndexWriterConfig config = new IndexWriterConfig(Version.LUCENE_40, analyzer);
     // IndexWriterを作る
     IndexWriter writer = new IndexWriter(index, config);
     // ファイルをインデックスに追加
