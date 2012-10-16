@@ -7,11 +7,11 @@
 	<title>Twitter Sets</title>
 	<link rel="stylesheet" type="text/css" href="css/twitter_sets.css">
 	<link rel="stylesheet" type="text/css" href="css/jqcloud.css" />
-	<script type="text/javascript" src="script/jquery-1.7.2.min.js"></script>
-	<script type="text/javascript" src="script/jqcloud-1.0.0.min.js"></script>
-	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-	<script type="text/javascript" src="script/twitter_sets.js"></script>
-	<script type="text/javascript">
+	<script type="text/javascript" charset="utf-8" src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" charset="utf-8" src="script/jqcloud-1.0.0.min.js"></script>
+	<script type="text/javascript" charset="utf-8" src="https://www.google.com/jsapi"></script>
+	<script type="text/javascript" charset="utf-8" src="script/twitter_sets.js"></script>
+	<script type="text/javascript" charset="utf-8">
     	google.load("visualization", "1", {packages:["corechart"]});
     </script>
 </head>
@@ -28,7 +28,7 @@
 	</div>
 	<div class="query">
     <!-- <form action="http://www.ai.cs.kobe-u.ac.jp/twisets/" method="post" id="searchForm"> -->		
-	<form action="/TwitterSets/TwitterSetsServlet" method="post" id="searchForm">
+	<form action="/Project311/CopyOfTwitterSetsServlet_back" method="post" id="searchForm">
 		<p><span class="deleteicon"><input type="text" class="del" id="query1" /><span class="bt" id="bt1"></span></span></p>
 		<p><span class="deleteicon"><input type="text" class="del" id="query2" /><span class="bt" id="bt2"></span></span></p>
 		<p><span class="deleteicon"><input type="text" class="del" id="query3" /><span class="bt" id="bt3"></span></span></p>

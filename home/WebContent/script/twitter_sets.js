@@ -74,8 +74,8 @@ function js2chart(head, chart) {
 		map = chart[i];
 		var t = new Array();
 
-		for (var j = 0; j < head.length; j++) {
-			var v = map[head[j]];
+		for (var k in map) {
+			v = map[k];
 			t.push(v);
 		}
 		tp.push(t);
@@ -109,8 +109,8 @@ function addTweets(tweets) {
 		//text += '   <span class="uname">' + uname + '</span>';
 		//text += '   <span class="date">' + date + '</span>';
 		text += '<div id="container"><div id="left">'+'<span class="uname">' + uname + '</span>'+'</div>';     
-	    text += '<div align="right">'+'<span class="date">' + date + '</span>'+'</div></div>';
-	     
+		text += '<div align="right">'+'<span class="date">' + date + '</span>'+'</div></div>';
+
 		text += '   <p class="tweet">' + tweet_str + '</p>';
 		text += '  </div>';
 		text += ' </div>';
@@ -134,7 +134,7 @@ function searchPost() {
 		var term3 = $("#query3").val();
 		var term4 = $("#query4").val();
 		var term5 = $("#query5").val();
-		
+
 		var url = $form.attr('action');
 		/* Send the data using post and put the results in a div */
 		$.post(url, {
@@ -172,7 +172,7 @@ function minustxt(txtid) {
 function drawTemporalDynamics_dummy(cand_word) {
 	var chartData = {};
 	chartData["name"] = "FIFA 2022 soccer World Cup"
-	chartData["data"] = [['Time', "FIFA 2022 soccer World Cup", 'Qatar'], ['2011/1/27', 1000, 400], ['2011/1/28', 1170, 460], ['2011/2/2', 660, 1120], ['2007/2/9', 1030, 540], ['2007/2/9', 1030, 540], ['2007/2/9', 1030, 540], ['2007/2/9', 1030, 540], ['2007/2/9', 1030, 540], ['2007/2/9', 1030, 540], ['2007/2/9', 1030, 540]];
+		chartData["data"] = [['Time', "FIFA 2022 soccer World Cup", 'Qatar'], ['2011/1/27', 1000, 400], ['2011/1/28', 1170, 460], ['2011/2/2', 660, 1120], ['2007/2/9', 1030, 540], ['2007/2/9', 1030, 540], ['2007/2/9', 1030, 540], ['2007/2/9', 1030, 540], ['2007/2/9', 1030, 540], ['2007/2/9', 1030, 540], ['2007/2/9', 1030, 540]];
 	var query = "FIFA 2022 soccer World Cup" + " " + cand_word;
 	addTemporalDynamics(query, chartData);
 }
@@ -254,7 +254,7 @@ function addWebSearchBox(query) {
 	wstext += '</select>';
 	wstext += '<input type="submit" value="Google Search" onclick="gsearch()" />';
 	wstext += '</div>'
-	$("#websearch").empty().append(wstext);
+		$("#websearch").empty().append(wstext);
 	$("#gsearch").val(query);
 }
 
