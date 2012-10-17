@@ -73,11 +73,26 @@ function js2chart(head, chart) {
 	for (var i = 0; i < chart.length; i++) {
 		map = chart[i];
 		var t = new Array();
-
+		var time,one,two;
+		var len=0;
 		for (var k in map) {
-			v = map[k];
-			t.push(v);
+			var v = map[k];
+			if(k == "time")time = v;
+			else{
+				if(len < k.length){
+					one = two;
+					two = v;
+				}
+				else{
+					one = v;
+				}
+				len = k.length;
+			}
 		}
+		t.push(time);
+		t.push(one);
+		t.push(two);
+		
 		tp.push(t);
 	}
 	return tp;
