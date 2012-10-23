@@ -138,6 +138,7 @@ function addTweets(tweets) {
 function searchPost() {
 	//alert("searchPost");
 	init();
+	changeRayout();
 	$("#searchForm").submit(function(event) {
 		$("#tagcloud").empty();
 		/* stop form from submitting normally */
@@ -171,13 +172,13 @@ function searchPost() {
 		}, "json");
 		$("#searchForm").unbind("submit");
 	});
-	//changeRayout();
+	
 }
-/*
+
 function changeRayout(){
-	$("#mainComponent").switchClass("span8",1000);
+	$(".defaultView").switchClass("defaultView","span4",100);
 }
-*/
+
 function init(){
 	$("#tagcloud").empty();
 	$("#tweets").empty();

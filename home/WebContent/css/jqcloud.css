@@ -3,6 +3,7 @@ div.jqcloud {
   color: #09f;
   overflow: hidden;
   position: relative;
+  width: 100%;
 }
 div.jqcloud a {
   color: inherit;
@@ -19,39 +20,39 @@ div.jqcloud span {
   padding: 0;
 }
 div.jqcloud span.w10 {
-  font-size: 54px;
+  font-size: 40px;
   color: #0cf;
 }
 div.jqcloud span.w9 {
-  font-size: 50px;
+  font-size: 32px;
   color: #0cf;
 }
 div.jqcloud span.w8 {
-  font-size: 44px;
+  font-size: 28px;
   color: #0cf;
 }
 div.jqcloud span.w7 {
-  font-size: 40px;
+  font-size: 24px;
   color: #39d;
 }
 div.jqcloud span.w6 {
-  font-size: 34px;
+  font-size: 20px;
   color: #90c5f0;
 }
 div.jqcloud span.w5 {
-  font-size: 30px;
+  font-size: 18px;
   color: #90a0dd;
 }
 div.jqcloud span.w4 {
-  font-size: 24px;
+  font-size: 16px;
   color: #90c5f0;
 }
 div.jqcloud span.w3 {
-  font-size: 20px;
+  font-size: 14px;
   color: #a0ddff;
 }
 div.jqcloud span.w2 {
-  font-size: 14px;
+  font-size: 12px;
   color: #99ccee;
 }
 div.jqcloud span.w1 {
