@@ -171,8 +171,13 @@ function searchPost() {
 		}, "json");
 		$("#searchForm").unbind("submit");
 	});
+	//changeRayout();
 }
-
+/*
+function changeRayout(){
+	$("#mainComponent").switchClass("span8",1000);
+}
+*/
 function init(){
 	$("#tagcloud").empty();
 	$("#tweets").empty();
