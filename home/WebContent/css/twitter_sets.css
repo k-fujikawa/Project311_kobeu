@@ -166,5 +166,11 @@ span.deleteicon input {
   padding-right: 16px;                
 }            
 
+#offsetdays{
+	width: 70px;
+}
 
+#keyday{
+	width: 100px;
+}
 

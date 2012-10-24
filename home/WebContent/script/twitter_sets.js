@@ -273,6 +273,7 @@ function addWebSearchBox(query) {
 	wstext += '<option value="4">4</option>';
 	wstext += '<option value="5">5</option>';
 	wstext += '</select>';
+	wstext += '<br/>';
 	wstext += '<input type="submit" value="Google Search" onclick="gsearch()" />';
 	wstext += '</div>'
 		$("#websearch").empty().append(wstext);
