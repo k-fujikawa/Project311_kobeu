@@ -118,8 +118,8 @@ public class IndexMaker {
       System.err.println("error: 引数は2つだけ指定してください．");
       System.exit(0);
     }
-    AnalyzerFactory analyzerFactory = new AnalyzerFactory(Version.LUCENE_36);
-    Analyzer analyzer = analyzerFactory.getJapaneseEnglishAnalyzer();
+    AnalyzerFactory analyzerFactory = new AnalyzerFactory(Version.LUCENE_40);
+    Analyzer analyzer = analyzerFactory.getJapaneseEnglishAnalyzerSearch();
     IndexMaker indexMaker = new IndexMaker(args[0], analyzer);
     try {
       indexMaker.updateAddIndex(args[1]);

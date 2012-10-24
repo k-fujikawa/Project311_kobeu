@@ -12,13 +12,14 @@ public class SampleExcec {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		CommandLine commandLine = new CommandLine("ping");
-	    commandLine.addArgument("localhost");
+	  // 参考：http://gihyo.jp/dev/serial/01/engineer_toolbox/0019
+		CommandLine commandLine = new CommandLine("ping"); // pingコマンドの実行を作成
+	    commandLine.addArgument("localhost"); // 引数
 	    //commandLine.addArgument("-n");
 	    //commandLine.addArgument("5");
 	    //commandLine.addArguments("-w 1000");
-	    //commandLine.addArgument("127.0.0.1");
-	    
+	    //commandLine.addArgument("127.0.0.1"); // adress of localhost
+
 	    // Executorを作成
 	    DefaultExecutor executor = new DefaultExecutor();
 	    try {

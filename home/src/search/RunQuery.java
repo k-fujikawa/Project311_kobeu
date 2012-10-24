@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,7 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-
+import lemurproject.indri.QueryEnvironment;
+import lemurproject.indri.ScoredExtentResult;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -36,6 +40,7 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.similarities.BM25Similarity;
+import org.apache.lucene.search.similarities.LMDirichletSimilarity;
 import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
@@ -44,6 +49,10 @@ import org.apache.lucene.util.Version;
 import com.mongodb.DBObject;
 
 public class RunQuery {
+  public static final String POST_ENCODING = "UTF-8";
+  protected static URL solrUrl = null;
+
+
 	private String field = null;
 	private String index = null;
 	private String server = null;
@@ -60,7 +69,7 @@ public class RunQuery {
 	}
 
 	public RunQuery(String hostname, int port) {
-		this.server = hostname + ":" + Integer.toString(port);
+	  this.server = "http://" + hostname + ":" + Integer.toString(port) + "/solr/collection1/select?wt=json&indent=true&fl=*%2Cscore&rows=1000&q=text%3A";
 	}
 
 	public void setField(String field) {
@@ -90,110 +99,134 @@ public class RunQuery {
 	  StringBuffer sb = new StringBuffer();
     for (String q : qs ) {
       sb.append(" " + q);
-      /*if (q.split(" ").length >= 2) {
-        sb.append(" +" + q); // AND
-      } else {
-        sb.append(" " + q);  // OR
-      }*/
     }
     return sb.toString();
 	}
 
-	/*
-	public List<Map> search2(List<String> qs, int retnum) {
-		String[] names;
-		List<Map> list = new ArrayList<Map>();
-		try {
-			String query = qs2query(qs, field);
-			System.out.println("QUERY : " + query + "(" + retnum + ")");
-			System.out.println("Index : " + this.index);
-			System.out.println("Server : " + this.server);
-
-			String[] cmd = { "/usr/local/bin/IndriRunQuery", "-query=" + query,
-					"-count=" + Integer.toString(retnum), "-server=" + server,
-					"-trecFormat=true" };
-			System.out.println("COMMAND : " + StringUtils.join(cmd, " "));
-			Process process = Runtime.getRuntime().exec(cmd);
-			InputStream is = process.getInputStream();
-			BufferedReader br = new BufferedReader(new InputStreamReader(is));
-			String line;
-			while ((line = br.readLine()) != null) {
-				String tweetid = line.split(" ")[2];
-				String score = line.split(" ")[4];
-				DBObject tweet_obj = db.getTweet(tweetid);
-				String tweet_str = (String) tweet_obj.get("tweet");
-				Date date = (Date) tweet_obj.get("date");
-				Map map = new HashMap<String, String>();
-				map.put("score", new Double(score));
-				map.put("tweetid", tweetid);
-				map.put("date", date);
-				map.put("tweet", tweet_str);
-				list.add(map);
-			}
-			// InputStream eis =process.getErrorStream();
-			// BufferedReader ebr = new BufferedReader(new
-			// InputStreamReader(eis));
-			// while ((line = ebr.readLine()) != null) {
-			// System.err.println(line);
-			// }
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return list;
-	}
-
-	public List<Map> search1(List<String> qs, int retnum) {
-		String[] names;
-		List<Map> list = new ArrayList<Map>();
-
-		try {
-			env = new QueryEnvironment();
-			if (index != null) {
-				System.out.println("Add index : " + index);
-				env.addIndex(index);
-			} else if (server != null) {
-				System.out.println("Add server : " + server);
-				env.addServer(server);
-			} else {
-				System.err.println("You should specify index or server.");
-			}
-			String query = qs2query(qs, field);
-			System.out.println("QUERY : " + query + "(" + retnum + ")");
-			System.out.println("Index : " + this.index);
-			System.out.println("Server : " + this.server);
-
-			ScoredExtentResult[] results = env.runQuery(query, retnum);
-
-			System.out.println("RetNum : " + results.length);
-
-			names = env.documentMetadata(results, "docno");
-			for (int i = 0; i < results.length; i++) {
-				DBObject tweet_obj = db.getTweet(names[i]);
-				String tweet_str = (String) tweet_obj.get("tweet");
-				Date date = (Date) tweet_obj.get("date");
-
-				Map map = new HashMap<String, String>();
-				map.put("score", results[i].score);
-				map.put("tweetid", names[i]);
-				map.put("date", date);
-				map.put("tweet", tweet_str);
-				list.add(map);
-			}
-			env.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return list;
-	}
-*/
-
 	/**
-	 * Luceneを使った検索を行なって結果のList<Map>を返す
+	 * Solrを使った検索を行なって結果のList<Map>を返す
 	 * @param query 合成済みクエリ
 	 * @param retnum
 	 * @return
 	 */
 	public List<Map> search(String query, int retnum) {
+    String[] names;
+    List<Map> list = new ArrayList<Map>();              // 検索結果のList<Map>
+    HttpURLConnection urlc = null;
+    try {
+      if (index != null) {                              // indexがセットされている時は、そのindexで検索
+        System.out.println("Add index : " + index);
+        indexDir = FSDirectory.open(new File(index));
+        reader = IndexReader.open(indexDir);
+        searcher = new IndexSearcher(reader);
+        //similarity = new BM25Similarity();
+        similarity = new LMDirichletSimilarity(10000f);
+        //similarity = new DefaultSimilarity();
+        searcher.setSimilarity(similarity);
+        analyzer = new AnalyzerFactory(Version.LUCENE_40).getJapaneseEnglishAnalyzer();
+        System.out.println("QUERY : " + query + "(" + retnum + ")");
+        System.out.println("Index : " + this.index);
+        System.out.println("Server : " + this.server);
+
+        // 検索
+        QueryParser qp = new QueryParser(Version.LUCENE_40, field, analyzer);
+        Query luceneQuery = qp.parse(query);
+        TopDocs topDocs = searcher.search(luceneQuery, retnum);
+        ScoreDoc[] hits = topDocs.scoreDocs;
+
+        System.out.println("RetNum : " + hits.length);
+
+        for (int i=0; i<hits.length; i++) {
+          int docId = hits[i].doc;
+          Document doc = searcher.doc(docId);
+
+          SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+          Date datetime = sdf.parse(doc.get("datetime"));
+
+          Map map = new HashMap<String, String>();
+          map.put("score", new Double(hits[i].score));
+          map.put("tweetid", (String) doc.get("tweet_id"));
+          map.put("userid", (String) doc.get("user_id"));
+          map.put("date", datetime);
+          map.put("tweet", (String) doc.get("text"));
+          list.add(map);
+        }
+        indexDir.close();
+        reader.close();
+      } else if (server != null) {
+        System.out.println("Add server : " + server);   // サーバがセットされている時は、そのサーバで検索
+        // リクエストURLの作成
+        StringBuffer sb = new StringBuffer();
+        sb.append(server);
+        sb.append(URLEncoder.encode(query, POST_ENCODING));
+        solrUrl = new URL(sb.toString());
+        // リクエスト
+        urlc = (HttpURLConnection) solrUrl.openConnection();
+        urlc.setRequestMethod("GET");
+        urlc.setRequestProperty("Content-type", "text/xml; charset=" + POST_ENCODING);
+        urlc.connect();
+        // リクエスト結果受信
+        BufferedReader reader =
+            new BufferedReader(new InputStreamReader(urlc.getInputStream(), POST_ENCODING));
+        // 結果の処理
+        int lineNum = 0;
+        int lineNum2 = 0;
+        Map map = new HashMap<String, Object>();
+        while (true) {
+          String line = reader.readLine(); // 結果を1行ずつ読み込む
+          lineNum++;
+          if ( line == null ) {
+            break;
+          }
+          if ( lineNum < 12 ) {
+            continue;
+          }
+          lineNum2++;
+          if ( lineNum2 == 2 ) {
+            String tweet_id = line.substring(20, line.length()-2);
+            map.put("tweetid", tweet_id);
+          } else if ( lineNum2 == 3 ) {
+            String user_id = line.substring(19, line.length()-2);
+            map.put("userid", user_id);
+          } else if (lineNum2 == 4) {
+            String datetimeStr = line.substring(20, line.length()-2);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date datetime = sdf.parse(datetimeStr);
+            map.put("date", datetime);
+          } else if (lineNum2 == 5) {
+            String text = line.substring(16, line.length()-2);
+            map.put("tweet", text);
+          } else if (lineNum2 == 6) {
+            String score = line.substring(16, line.length()-2);
+            map.put("score", Double.parseDouble(score));
+          } else if (lineNum2 == 7) {
+            lineNum2 = 1;
+            list.add(map);
+            map = new HashMap<String, Object>();
+          }
+        }
+
+      } else {                                          // indexかサーバどちらかがセットされていないとエラー
+        System.err.println("You should specify index or server.");
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    } finally {
+      // 終了処理
+      if (urlc != null) {
+        urlc.disconnect();
+      }
+    }
+    return list;
+	}
+
+	 /**
+   * Luceneを使った検索を行なって結果のList<Map>を返す
+   * @param query 合成済みクエリ
+   * @param retnum
+   * @return
+   */
+  public List<Map> search2(String query, int retnum) {
     String[] names;
     List<Map> list = new ArrayList<Map>();              // 検索結果のList<Map>
 
@@ -203,13 +236,13 @@ public class RunQuery {
         indexDir = FSDirectory.open(new File(index));
         reader = IndexReader.open(indexDir);
         searcher = new IndexSearcher(reader);
-        similarity = new BM25Similarity();
+        //similarity = new BM25Similarity();
+        similarity = new LMDirichletSimilarity(10000f);
         //similarity = new DefaultSimilarity();
         searcher.setSimilarity(similarity);
         analyzer = new AnalyzerFactory(Version.LUCENE_40).getJapaneseEnglishAnalyzer();
       } else if (server != null) {
         System.out.println("Add server : " + server);   // サーバがセットされている時は、そのサーバで検索
-        System.err.println("Sorry, I don't know how to use Lucene on server...");
       } else {                                          // indexかサーバどちらかがセットされていないとエラー
         System.err.println("You should specify index or server.");
       }
@@ -246,21 +279,29 @@ public class RunQuery {
       e.printStackTrace();
     }
     return list;
-	}
+  }
+
 
 	public Map<String, Double> tagcloud(Map<String, Double> map_) {
+	  System.out.println("############### RunQuery.tagcloud #################");
+	  System.out.println("size of map_ = " + map_.size());
 		Map<String, Double> map = new HashMap<String, Double>();
 		double Z = 0;
 		double[] vs = ArrayUtils.toPrimitive(map_.values().toArray(
 				new Double[0]));
 		double v_max = StatUtils.max(vs);
 		double v_min = StatUtils.min(vs);
+		System.out.println("vs = " + vs);
+		System.out.println("size of vs = " + vs.length);
+		System.out.println("v_max = " + v_max);
+		System.out.println("v_min = " + v_min);
 
 		for (String term : map_.keySet()) {
 			double score = ((map_.get(term) - v_min) / (v_max - v_min) + 0.1) * 10;
 			map.put(term, score);
 			System.out.println(score + "\t" + term);
 		}
+		System.out.println("####################################################");
 		return map;
 	}
 

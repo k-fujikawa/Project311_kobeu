@@ -33,10 +33,11 @@ public class CopyOfTwitterSetsServlet_back extends HttpServlet {
   public static String JSD = "/script/";
   public static String IMGD = "/img/";
   //private static String index = "/Users/kitaguchisayaka/MinHcompSearch_Demo/data/trectext.en.krov";
-  //String hostname = "rubicon.cs.scitec.kobe-u.ac.jp";
-  String hostname = "localhost";
+  String hostname = "rubicon.cs.scitec.kobe-u.ac.jp";
+  //String hostname = "localhost";
   //int port = 5600;
-  int port = 57000;
+  //int port = 57000; // Indri port of mylocalhost
+  int port = 8983;
 
   /**
    * @see HttpServlet#HttpServlet()
@@ -59,9 +60,12 @@ public class CopyOfTwitterSetsServlet_back extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     response.setContentType("text/html; charset=UTF-8");
-	  //RunQuery rq = new RunQuery(hostname, port);
-    RunQuery rq = new RunQuery("/Users/kazuki/Dropbox/Project311_kobeu/indexAllField3000");
-	  Gson gs = new Gson();                          // Gson = JSONをJavaオブジェクトにする
+	  RunQuery rq = new RunQuery(hostname, port);
+    //RunQuery rq = new RunQuery("/home/project311/index311AllField");
+    //RunQuery rq = new RunQuery("/home/project311/indexAllField3000");
+    //RunQuery rq = new RunQuery("/home/project311/index311_out0");
+    //RunQuery rq = new RunQuery("/Users/kitaguchisayaka/Project/Project311/indexAllField3000");
+    Gson gs = new Gson();                          // Gson = JSONをJavaオブジェクトにする
     PrintWriter out = response.getWriter();
     List<String> qs = new ArrayList<String>();     // クエリを入れるArrayList生成
     qs.add(request.getParameter("q1"));            // 5つのクエリを取得・格納
@@ -72,7 +76,7 @@ public class CopyOfTwitterSetsServlet_back extends HttpServlet {
     //System.out.println(ArrayUtils.toString(qs));
     String query = rq.qs2query(qs, null);
     //String query = StringUtils.join(qs, " ");
-    //query = StringUtils.strip(query);
+    //query = StringUtfils.strip(query);
     String cw = request.getParameter("cw");        // cw取得(何？condition_word? clear_word?)
 
     /* original query processing */
@@ -82,13 +86,14 @@ public class CopyOfTwitterSetsServlet_back extends HttpServlet {
       int tweetnum = 10;
       int tagnum = 25;
       int retnum = 100;
-      int M = 30;
-      int L = 30;
+      int M = 20; // fosterでは30にしたらtomcat落ちる
+      int L = 20;
       double alpha = 0.9;
       double enTh = 0.1;
       TemporalProfile tp = new TemporalProfile(rq, query, retnum);
 
       System.out.println("TP size : "+tp.size());
+      tp.printTopTweets(100);
       ////////////////////////////////////
       //System.out.println("JS"+gs.toJson(js).toString());
       ////////////////////////////////////
@@ -97,6 +102,8 @@ public class CopyOfTwitterSetsServlet_back extends HttpServlet {
         out.println(gs.toJson(js).toString());
       }else{
         Map<String, Double> map = tp.TSQE(M, L, alpha, enTh);
+        System.out.println("size of map = " + map.size());
+        System.out.println("TSQE finished");
         Map<String, Double> tagcloud = rq.tagcloud(tp.topCandTerms(map, tagnum));
         List<Object[]> tweets = tp.topTweets(tweetnum);
         Map js = new HashMap();

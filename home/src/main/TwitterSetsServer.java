@@ -73,7 +73,7 @@ public class TwitterSetsServer implements Runnable {
 			String[] qq = query_str.split("##");
 			String query = qq[0];
 			String results = "";
-			
+
 			RunQuery rq = new RunQuery(hostname, port);
 			Gson gs = new Gson();
 			query = StringUtils.strip(query);
@@ -90,7 +90,7 @@ public class TwitterSetsServer implements Runnable {
 				double enTh = 0.1;
 				TemporalProfile tp = new TemporalProfile(rq, query, retnum);
 				System.out.println("TP size : "+tp.size());
-				////////////////////////////////////			
+				////////////////////////////////////
 				//System.out.println("JS"+gs.toJson(js).toString());
 				////////////////////////////////////
 				if(tp.size() == 0){
@@ -116,12 +116,12 @@ public class TwitterSetsServer implements Runnable {
 				int retnum = 100;
 				int tweetnum = 10;
 				int L = 30;
-				
+
 				Set<String> cand_terms = new HashSet<String>();
 				cand_terms.add(cw);
 				TemporalProfile tp_q = new TemporalProfile(rq, query, retnum);
 				TemporalProfile tp_eq = new TemporalProfile(rq, equery, retnum);
-				
+
 				Map<String, Map> tp_map = new HashMap<String, Map>();
 				tp_map.put(query,  tp_q.temporalModel(tp_q.queryProfile(), L));
 				tp_map.put(equery, tp_q.temporalModel(tp_q.exQueryProfile(cand_terms).get(cw), L));
@@ -130,7 +130,7 @@ public class TwitterSetsServer implements Runnable {
 				Map js = new HashMap();
 				System.out.println("QP size : "+tp_q.size());
 				System.out.println("EQP size : "+tp_eq.size());
-				
+
 				js.put("tweets", tp_eq.topTweets(tweetnum));
 				js.put("chart", tps);
 				results = gs.toJson(js).toString();

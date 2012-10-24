@@ -17,6 +17,7 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.ja.tokenattributes.PartOfSpeechAttribute;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.util.Version;
 
@@ -85,7 +86,7 @@ public class TemporalProfile {
 			"whoever", "whole", "whom", "whomever", "whomsoever", "whose",
 			"whosoever", "why", "will", "wilt", "with", "within", "without",
 			"worse", "worst", "would", "wow", "ye", "yet", "year", "yippee",
-			"you", "your", "yours", "yourself", "yourselves" };
+			"you", "your", "yours", "yourself", "yourselves", "rt" };
 	Set<String> stopwords = new HashSet<String>();
 	RunQuery rq;
 	List<Map> tweets;
@@ -176,11 +177,20 @@ public class TemporalProfile {
       while (stream.incrementToken()) {
         CharTermAttribute termAtt
         = stream.getAttribute(CharTermAttribute.class); //単語そのものを取り出す
-        termList.add(termAtt.toString());
+        PartOfSpeechAttribute psAtt
+        = stream.getAttribute(PartOfSpeechAttribute.class); // 品詞を取り出す
+        String psAttStr = psAtt.getPartOfSpeech();
+        if (psAttStr.indexOf("名詞") != -1) {
+          //if (psAttStr.indexOf("固有") != -1 || psAttStr.indexOf("名詞,一般") != -1 || psAttStr.indexOf("名詞,サ変接続") != -1) {
+          termList.add(termAtt.toString());
+          //}
+        }
       }
+      stream.close();
     } catch (IOException e) {
       e.printStackTrace();
     }
+    sReader.close();
     String[] terms = (String[]) termList.toArray(new String[termList.size()]);
     return terms;
   }
@@ -211,14 +221,19 @@ public class TemporalProfile {
    */
   public Set<String> candTerms(int top) {
     Set<String> terms = new HashSet<String>();
+    System.out.println("########## TemporalPrifile.candTerms ##########");
+    System.out.println("size of tweets = " + tweets.size());
     for (int i = 0; i < top && i < tweets.size(); i++) {
       Map tweet = tweets.get(i);
       String tweetid = (String) tweet.get("tweetid"); // tweet_id 取得
       String tweet_str = (String) tweet.get("tweet"); // text 取得
+      System.out.println("(tweetid, tweet) = (" + tweetid + ", " + tweet + ")");
       String[] terms_ = prepro(tweet_str);            // textに含まれる単語のリストを生成
+      System.out.println("terms = " + terms);
       terms_ = stop(terms_);                          // ストップワードと1文字以下の単語を除去
       terms.addAll(Arrays.asList(terms_));            // 配列中の単語(String)をSetに追加。同じ単語はマージされる
     }
+    System.out.println("##########################################");
     return terms;
   }
 
@@ -362,21 +377,35 @@ public class TemporalProfile {
 		return -kl;
 	}
 
+	/**
+	 * 単語とKL擬似距離のマップを返す
+	 * @param M
+	 * @param L
+	 * @param alpha
+	 * @param enTh
+	 * @return
+	 */
 	public Map<String, Double> TSQE(int M, int L, double alpha, double enTh) {
+	  System.out.println("############### TemporalProfile.TSQE #################");
 		Map<String, Double> klDic = new HashMap();
 		Set<String> candTerms = new HashSet<String>();
 		// enFilter(enTh);
 		candTerms = candTerms(M); // ヒットしたtweetに登場した単語のリスト（重複なし）
+		System.out.println("size of candTerms = " + candTerms.size());
 		Map<Date, Double> tempQueryModel = temporalModel(queryProfile(), L);   // ヒットした全てのtweet分だけ、日付とその日の正規化スコアのマップを生成
+		System.out.println("size of tempQueryModel = " + tempQueryModel.size());
 		Map<String, List<DateScore>> exQueryProfiles = exQueryProfile(candTerms); // 単語と、その単語が登場したtweetの日付とexp(スコア)のマップを作成
+		System.out.println("size of exQueryProfiles = " + exQueryProfiles.size());
 		Map<String, Double> klScoreList = new HashMap<String, Double>();
 		for (String term : exQueryProfiles.keySet()) {                         // 単語を1つずつ取り出して
 			List<DateScore> exQueryProfile = exQueryProfiles.get(term);          // その単語に対応するDateScoreのリストを取得
 			Map<Date, Double> tempExQueryModel = temporalModel(exQueryProfile,   // その単語が登場した日付ごとに、日付とその日の正規化スコアのマップを作成
 					L);
-			Double klScore = KLdiv(tempQueryModel, tempExQueryModel, alpha);
-			klDic.put(term, klScore);
+			Double klScore = KLdiv(tempQueryModel, tempExQueryModel, alpha);     // KL擬似距離
+			klDic.put(term, klScore);                                            // 単語とKL擬似距離のマップ
 		}
+		System.out.println("size of KlDic = " + klDic.size());
+		System.out.println("######################################################");
 		return klDic;
 	}
 
@@ -429,7 +458,7 @@ public class TemporalProfile {
 		}
 	}
 
-	private void printTopTweets(int top) {
+	public void printTopTweets(int top) {
 		List<Object[]> tweets = topTweets(top);
 		for (Object[] tweet : tweets) {
 			System.out.println(StringUtils.join(tweet, "\t"));
@@ -444,17 +473,18 @@ public class TemporalProfile {
 		Set<String> candTerms = new HashSet<String>();
 		List<String> qs = new ArrayList<String>();
 		// String query = "FIFA soccer 2022";
-		qs.add("FIFA");
+		qs.add("福島");
 		// qs.add("World Cup");
-		qs.add("soccer");
-		qs.add("2022");
+		qs.add("原発");
+		qs.add("地震");
 		int retnum = 1000;
 		int M = 10;
 		int L = 20;
 		double alpha = 0.9;
 		double enTh = 0.1;
     //RunQuery rq = new RunQuery("rubicon.cs.scitec.kobe-u.ac.jp", 5600);
-    RunQuery rq = new RunQuery("localhost", 57000);
+    //RunQuery rq = new RunQuery("localhost", 57000);
+		RunQuery rq = new RunQuery("/Users/kitaguchisayaka/Project/Project311/indexAllField3000");
 		String query = rq.qs2query(qs, null);
 		TemporalProfile tp = new TemporalProfile(rq, query, retnum);
 		Map<String, Double> map = tp.TSQE(M, L, alpha, enTh);
