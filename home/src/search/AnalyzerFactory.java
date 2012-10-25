@@ -1,5 +1,8 @@
 package search;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.lucene.analysis.Analyzer;
 
 import org.apache.lucene.analysis.ja.JapaneseAnalyzer;
@@ -9,8 +12,13 @@ import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.util.Version;
 
 public class AnalyzerFactory {
-
-  private Version version; /** Luceneのバージョン */
+  /** Luceneのバージョン */
+  private Version version;
+  /** TwitterAnalyzerに追加するstopwords */
+  private String[] ç = {
+      "jp", "そう", "さん", "あなた", "みなさん", "皆さん", "はず",
+      "今日"
+  };
 
   /**
    * コンストラクタ
@@ -58,6 +66,14 @@ public class AnalyzerFactory {
   public Analyzer getJapaneseEnglishAnalyzerExtended() {
     CharArraySet stopwords = getStopWordsCharArraySet();
     Analyzer analyzer = new JapaneseEnglishAnalyzer(version, null, JapaneseTokenizer.Mode.EXTENDED, stopwords, JapaneseAnalyzer.getDefaultStopTags());
+    return analyzer;
+  }
+
+
+  public Analyzer getTwitterSearchAnalyzer() {
+    CharArraySet stopwords = getStopWordsCharArraySet();
+    stopwords.addAll(stopwords);
+    Analyzer analyzer = new JapaneseEnglishAnalyzer(version, null, JapaneseTokenizer.Mode.SEARCH, stopwords, JapaneseAnalyzer.getDefaultStopTags());
     return analyzer;
   }
 

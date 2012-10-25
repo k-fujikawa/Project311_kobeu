@@ -86,7 +86,11 @@ public class TemporalProfile {
 			"whoever", "whole", "whom", "whomever", "whomsoever", "whose",
 			"whosoever", "why", "will", "wilt", "with", "within", "without",
 			"worse", "worst", "would", "wow", "ye", "yet", "year", "yippee",
-			"you", "your", "yours", "yourself", "yourselves", "rt" };
+			"you", "your", "yours", "yourself", "yourselves",
+			"com", "gt", "jp", "rt", "あたし", "あなた", "いわく", "お気", "今日", "今回", "こちら", "こっち",
+			"さん","そ", "そう", "ちゃん", "どこ", "どれ", "はず", "はん", "ふう", "み", "みたい",
+			"皆さん", "みなさん", "よ", "よう", "私", "わたし"
+	    };
 	Set<String> stopwords = new HashSet<String>();
 	RunQuery rq;
 	List<Map> tweets;
@@ -171,6 +175,27 @@ public class TemporalProfile {
     // System.out.println(sent);
     sent = sent.toLowerCase();                 // textをすべて小文字に
     sent = sent.replaceAll(urlpat, " ");       // textからURL除去
+    String[] words = sent.split(" ");          // usernameとhashtagを選択
+    for (String word : words) {
+      int at_index = word.indexOf("@");
+      if (at_index != -1) {
+        if (at_index+2 < word.length()) { // @単体をつぶやくユーザがいるようだ
+          String user_name = word.substring(at_index, word.length()-1);
+          user_name = user_name.replaceAll("[^@_a-zA-Z0-9]", "");
+          termList.add(user_name);
+          sent = sent.replace(user_name, "");
+          //System.out.println(":::::::::::::::::::::::::::::::::::" + user_name);
+        }
+      }
+      int hashtag_index = word.indexOf("#");
+      if (hashtag_index != -1) {
+        String hash_tag = word.substring(hashtag_index);
+        hash_tag = hash_tag.replaceAll("[^#_a-zA-Z0-9]", "");
+        termList.add(hash_tag);
+        sent = sent.replace(hash_tag, "");
+        //System.out.println(":::::::::::::::::::::::::::::::::::" + hash_tag);
+      }
+    }
     StringReader sReader = new StringReader(sent);
     try {
       TokenStream stream = analyzer.tokenStream("", sReader);
@@ -181,9 +206,10 @@ public class TemporalProfile {
         = stream.getAttribute(PartOfSpeechAttribute.class); // 品詞を取り出す
         String psAttStr = psAtt.getPartOfSpeech();
         if (psAttStr.indexOf("名詞") != -1) {
-          //if (psAttStr.indexOf("固有") != -1 || psAttStr.indexOf("名詞,一般") != -1 || psAttStr.indexOf("名詞,サ変接続") != -1) {
-          termList.add(termAtt.toString());
-          //}
+          String noun = termAtt.toString();
+          if (!noun.matches("^[0-9]*$")) {          // 数字だけで構成されているものはリストに加えない
+            termList.add(termAtt.toString());
+          }
         }
       }
       stream.close();
