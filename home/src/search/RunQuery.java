@@ -283,25 +283,26 @@ public class RunQuery {
 
 
 	public Map<String, Double> tagcloud(Map<String, Double> map_) {
-	  System.out.println("############### RunQuery.tagcloud #################");
-	  System.out.println("size of map_ = " + map_.size());
+	  //System.out.println("############### RunQuery.tagcloud #################");
+	  //System.out.println("size of map_ = " + map_.size());
 		Map<String, Double> map = new HashMap<String, Double>();
 		double Z = 0;
 		double[] vs = ArrayUtils.toPrimitive(map_.values().toArray(
 				new Double[0]));
 		double v_max = StatUtils.max(vs);
 		double v_min = StatUtils.min(vs);
-		System.out.println("vs = " + vs);
-		System.out.println("size of vs = " + vs.length);
-		System.out.println("v_max = " + v_max);
-		System.out.println("v_min = " + v_min);
+		//System.out.println("vs = " + vs);
+		//System.out.println("size of vs = " + vs.length);
+		//System.out.println("v_max = " + v_max);
+		//System.out.println("v_min = " + v_min);
 
 		for (String term : map_.keySet()) {
 			double score = ((map_.get(term) - v_min) / (v_max - v_min) + 0.1) * 10;
 			map.put(term, score);
-			System.out.println(score + "\t" + term);
+			System.out.print(term + " ");
 		}
-		System.out.println("####################################################");
+		System.out.println();
+		//System.out.println("####################################################");
 		return map;
 	}
 

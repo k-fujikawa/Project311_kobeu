@@ -3,10 +3,12 @@ package main;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -18,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import search.RunQuery;
 import search.TemporalProfile;
+import search.TimeModule;
 
 import com.google.gson.Gson;
 
@@ -38,7 +41,6 @@ public class CopyOfTwitterSetsServlet_back extends HttpServlet {
   //int port = 5600;
   //int port = 57000; // Indri port of mylocalhost
   int port = 8983;
-
   /**
    * @see HttpServlet#HttpServlet()
    */
@@ -65,6 +67,8 @@ public class CopyOfTwitterSetsServlet_back extends HttpServlet {
     //RunQuery rq = new RunQuery("/home/project311/indexAllField3000");
     //RunQuery rq = new RunQuery("/home/project311/index311_out0");
     //RunQuery rq = new RunQuery("/Users/kitaguchisayaka/Project/Project311/indexAllField3000");
+    // heap error RunQuery rq = new RunQuery("/Volumes/KITA_HDD/Project/Project311/index311AllField");
+    //RunQuery rq = new RunQuery("/Volumes/KITA_HDD/Project/Project311/index311_out0");
     Gson gs = new Gson();                          // Gson = JSONをJavaオブジェクトにする
     PrintWriter out = response.getWriter();
     List<String> qs = new ArrayList<String>();     // クエリを入れるArrayList生成
@@ -81,6 +85,7 @@ public class CopyOfTwitterSetsServlet_back extends HttpServlet {
 
     /* original query processing */
     if (rq.queryCheck(qs) && cw == null) {         // クエリリストに少なくとも1つクエリがあり、かつcwがnullのとき
+      TimeModule.printTime();
       System.out.println("QUERY : "+query);
       Set<String> candTerms = new HashSet<String>(); // 推薦タームリスト?生成
       int tweetnum = 10;
@@ -93,7 +98,7 @@ public class CopyOfTwitterSetsServlet_back extends HttpServlet {
       TemporalProfile tp = new TemporalProfile(rq, query, retnum);
 
       System.out.println("TP size : "+tp.size());
-      tp.printTopTweets(100);
+      //tp.printTopTweets(100);
       ////////////////////////////////////
       //System.out.println("JS"+gs.toJson(js).toString());
       ////////////////////////////////////
@@ -102,8 +107,8 @@ public class CopyOfTwitterSetsServlet_back extends HttpServlet {
         out.println(gs.toJson(js).toString());
       }else{
         Map<String, Double> map = tp.TSQE(M, L, alpha, enTh);
-        System.out.println("size of map = " + map.size());
-        System.out.println("TSQE finished");
+        //System.out.println("size of map = " + map.size());
+        //System.out.println("TSQE finished");
         Map<String, Double> tagcloud = rq.tagcloud(tp.topCandTerms(map, tagnum));
         List<Object[]> tweets = tp.topTweets(tweetnum);
         Map js = new HashMap();
@@ -115,7 +120,7 @@ public class CopyOfTwitterSetsServlet_back extends HttpServlet {
     }
     /* expanded query processing */
     else if (rq.queryCheck(qs)  && cw != null) {
-      System.out.println("ok");
+      //System.out.println("ok");
       List<String> eqs = new ArrayList<String>(qs);
       eqs.add(cw);
       String equery = rq.qs2query(eqs, null);

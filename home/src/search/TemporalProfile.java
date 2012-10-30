@@ -112,7 +112,7 @@ public class TemporalProfile {
 		this.rq = rq;
 		this.query = query;
 		tweets = rq.search(this.query, retnum);
-		System.out.println("tweets size : " + tweets.size());
+		//System.out.println("tweets size : " + tweets.size());
 		stopwords = new HashSet<String>(Arrays.asList(sws));
 	}
 
@@ -247,19 +247,19 @@ public class TemporalProfile {
    */
   public Set<String> candTerms(int top) {
     Set<String> terms = new HashSet<String>();
-    System.out.println("########## TemporalPrifile.candTerms ##########");
-    System.out.println("size of tweets = " + tweets.size());
+    //System.out.println("########## TemporalPrifile.candTerms ##########");
+    //System.out.println("size of tweets = " + tweets.size());
     for (int i = 0; i < top && i < tweets.size(); i++) {
       Map tweet = tweets.get(i);
       String tweetid = (String) tweet.get("tweetid"); // tweet_id 取得
       String tweet_str = (String) tweet.get("tweet"); // text 取得
-      System.out.println("(tweetid, tweet) = (" + tweetid + ", " + tweet + ")");
+      //System.out.println("(tweetid, tweet) = (" + tweetid + ", " + tweet + ")");
       String[] terms_ = prepro(tweet_str);            // textに含まれる単語のリストを生成
-      System.out.println("terms = " + terms);
+      //System.out.println("terms = " + terms);
       terms_ = stop(terms_);                          // ストップワードと1文字以下の単語を除去
       terms.addAll(Arrays.asList(terms_));            // 配列中の単語(String)をSetに追加。同じ単語はマージされる
     }
-    System.out.println("##########################################");
+    //System.out.println("##########################################");
     return terms;
   }
 
@@ -412,16 +412,16 @@ public class TemporalProfile {
 	 * @return
 	 */
 	public Map<String, Double> TSQE(int M, int L, double alpha, double enTh) {
-	  System.out.println("############### TemporalProfile.TSQE #################");
+	  //System.out.println("############### TemporalProfile.TSQE #################");
 		Map<String, Double> klDic = new HashMap();
 		Set<String> candTerms = new HashSet<String>();
 		// enFilter(enTh);
 		candTerms = candTerms(M); // ヒットしたtweetに登場した単語のリスト（重複なし）
-		System.out.println("size of candTerms = " + candTerms.size());
+		//System.out.println("size of candTerms = " + candTerms.size());
 		Map<Date, Double> tempQueryModel = temporalModel(queryProfile(), L);   // ヒットした全てのtweet分だけ、日付とその日の正規化スコアのマップを生成
-		System.out.println("size of tempQueryModel = " + tempQueryModel.size());
+		//System.out.println("size of tempQueryModel = " + tempQueryModel.size());
 		Map<String, List<DateScore>> exQueryProfiles = exQueryProfile(candTerms); // 単語と、その単語が登場したtweetの日付とexp(スコア)のマップを作成
-		System.out.println("size of exQueryProfiles = " + exQueryProfiles.size());
+		//System.out.println("size of exQueryProfiles = " + exQueryProfiles.size());
 		Map<String, Double> klScoreList = new HashMap<String, Double>();
 		for (String term : exQueryProfiles.keySet()) {                         // 単語を1つずつ取り出して
 			List<DateScore> exQueryProfile = exQueryProfiles.get(term);          // その単語に対応するDateScoreのリストを取得
@@ -430,8 +430,8 @@ public class TemporalProfile {
 			Double klScore = KLdiv(tempQueryModel, tempExQueryModel, alpha);     // KL擬似距離
 			klDic.put(term, klScore);                                            // 単語とKL擬似距離のマップ
 		}
-		System.out.println("size of KlDic = " + klDic.size());
-		System.out.println("######################################################");
+		//System.out.println("size of KlDic = " + klDic.size());
+		//System.out.println("######################################################");
 		return klDic;
 	}
 
