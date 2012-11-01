@@ -10,7 +10,7 @@ public class TimeModule {
   public static void printTime() {
     Calendar runTime = Calendar.getInstance(Locale.JAPAN);
     String yearStr = String.valueOf(runTime.get(Calendar.YEAR));
-    String monthStr = String.valueOf(runTime.get(Calendar.MONTH));
+    String monthStr = String.valueOf(runTime.get(Calendar.MONTH)+1);
     String dayStr = String.valueOf(runTime.get(Calendar.DAY_OF_MONTH));
     String hourStr = String.valueOf(runTime.get(Calendar.HOUR_OF_DAY));
     String minuteStr = String.valueOf(runTime.get(Calendar.MINUTE));
